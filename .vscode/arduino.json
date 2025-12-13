@@ -1,0 +1,7 @@
+{
+    "configuration": "core=arduboy-core,boot=cathy3k",
+    "board": "arduboy-homemade:avr:arduboy-fx",
+    "output": "/Users/simonholmes/projects/build",
+    "sketch": "Euchre_Arduboy.ino",
+    "port": "/dev/tty.usbmodem14601"
+}
