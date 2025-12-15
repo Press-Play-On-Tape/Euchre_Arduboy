@@ -6,7 +6,7 @@
 #include "../utils/Enums.h"
 #include "../utils/Utils.h"
 #include "Card.h"
-#include "SuitPile.h"
+// #include "SuitPile.h"
 #include "GameRound.h"
 
 
@@ -459,7 +459,8 @@ uint8_t getTop_InSuit(Suit trumps, Suit suitToFollow) {
     // What is the highest unplayed card in this suit?
 
     Rank highestUnplayedCard = playersHighestCard.getRank();
-    Rank topRank = (trumps == suitToFollow ? Rank::TopCard : Rank::Ace);
+
+    Rank topRank = (trumps == suitToFollow ? Rank::Right_Bower : Rank::Ace);
 
     for (Rank rank = topRank; rank >= playersHighestCard.getRank(); rank--) {
 
@@ -528,7 +529,7 @@ uint8_t getTop_InSuit(Suit trumps, Suit suitToFollow, Rank topRank) {
 
     Rank highestUnplayedCard = Rank::None;
 
-    for (Rank rank = Rank::Four; rank <= topRank; rank++) {
+    for (Rank rank = Rank::Nine; rank <= topRank; rank++) {
 
         if (trumps == suitToFollow && rank == Rank::Jack) continue;
 
@@ -608,7 +609,7 @@ uint8_t getScoreOfCards_InSuit(Suit suit, Rank lowestRank, BidType bidType) {
 
             switch (bidType) {
             
-                case BidType::Suit:
+                case BidType::Partner:
 
                     scoreOfCards = scoreOfCards + Constants::ScoreType_Basic[static_cast<uint8_t>(card.getRank())];
                     break;
@@ -896,18 +897,14 @@ uint8_t numberOfUnplayedCards_InSuit(Suit suit, Rank cardsAbove) {
     // Remove any cards in kitty ..
 
     if (this->getPlayerNumber() == this->gameRound->getWinningBid_Idx()) {
-        
-        // for (int i = 1; i < 3; i++) {
 
-        //     Card *card = this->gameRound->getKitty(i);
+        Card *card = this->gameRound->getKitty();
 
-        //     if (card->getSuit() == suit && card->getRank() > cardsAbove) {
+        if (card->getSuit() == suit && card->getRank() > cardsAbove) {
 
-        //         count--;
+            count--;
 
-        //     }
-
-        // }
+        }
     
     }
 
@@ -960,7 +957,7 @@ uint8_t getBottom_InSuit(Suit trumps, Suit suitToFollow) {
 
     Rank lowestUnplayedCard = playersLowestCard.getRank();
 
-    for (Rank rank = Rank::Four; rank < static_cast<Rank>(static_cast<uint8_t>(playersLowestCard.getRank()) + 1); rank++) {
+    for (Rank rank = Rank::Nine; rank < static_cast<Rank>(static_cast<uint8_t>(playersLowestCard.getRank()) + 1); rank++) {
 
         if (trumps == suitToFollow && rank == Rank::Jack) continue;
 
@@ -1027,7 +1024,7 @@ uint8_t getBottom_InSuit(Suit trumps, Suit suitToFollow, Rank bottomRank) {
 
     Rank lowestUnplayedCard = Rank::TopCard;
 
-    for (Rank rank = Rank::Four; rank <= bottomRank; rank++) {
+    for (Rank rank = Rank::Nine; rank <= bottomRank; rank++) {
 
         if (trumps == suitToFollow && rank == Rank::Jack) continue;
 

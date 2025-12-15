@@ -1,7 +1,7 @@
 #pragma once
 
 enum class BidMode : uint8_t { 
-    Suit,
+    SuitSelect,
     Pass, 
     Bid, 
     Alone,
@@ -105,7 +105,7 @@ inline Rank operator--(Rank &c, int) {
 
 enum class BidType : uint8_t { 
     Pass, 
-    Suit, 
+    Partner, 
     Alone,
     None
 };
@@ -161,7 +161,6 @@ enum class GameState : uint8_t {
         Bid_Round_Delay, 
         Bid_Round2, 
         Bid_Player_Round2, 
-        // Bid_Finished,
         Bid_Failed,
         Handle_Kitty,
         Play_Round_Start,

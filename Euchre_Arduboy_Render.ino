@@ -35,7 +35,8 @@ void renderPlayerHands(uint8_t currentPlane, bool blinkSelected, bool blinkRaise
 
                     case GameState::Handle_Kitty:
 
-                        if (gameRound.getHighestBid().getPlayerIdx() == Constants::HumanPlayer) {
+                        // if (gameRound.getHighestBid().getPlayerIdx() == Constants::HumanPlayer) {
+                        if (gameState == GameState::Handle_Kitty) {
                             
                             y = 47 - (card.isSelected() ? 4 : 0);
 
@@ -126,7 +127,7 @@ void renderDealer(uint8_t currentPlane) {
 
     }
 
-    SpritesU::drawOverwriteFX(x, y, Images::Dealer, currentPlane); 
+    SpritesU::drawPlusMaskFX(x, y, Images::Dealer, currentPlane); 
 
 }
 
@@ -165,15 +166,13 @@ void renderBids(uint8_t currentPlane) {
 
         switch (bid.getBidType()) {
 
-            case BidType::Suit:
+            case BidType::Partner:
                 {
-                    // uint8_t idx = ((10 - bid.getLevel()) * 6) + static_cast<uint8_t>(bid.getSuit());
                 
                     SpritesU::drawPlusMaskFX(91, 15, Images::Bid_Right, (1 * 3) + currentPlane); 
                 
                     if (dealer == 0) {
                         bidder_X = 92;
-                        // bidder_Y = 35 + (bid.getLevel() == 10 ? 2 : 0);
                     }
                 
                 }
@@ -181,13 +180,11 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Alone:
                 {
-                    // uint8_t idx = ((10 - bid.getLevel()) * 6) + static_cast<uint8_t>(bid.getSuit());
                 
                     SpritesU::drawPlusMaskFX(91, 15, Images::Bid_Right, (0 * 3) + currentPlane); 
                 
                     if (dealer == 0) {
                         bidder_X = 92;
-                        // bidder_Y = 35 + (bid.getLevel() == 10 ? 2 : 0);
                     }
                 
                 }
@@ -225,13 +222,11 @@ void renderBids(uint8_t currentPlane) {
 
         switch (bid.getBidType()) {
 
-            case BidType::Suit:
+            case BidType::Partner:
                 {
-                    // uint8_t idx = ((static_cast<uint8_t>(bid.getSuit()) * 5) + (bid.getLevel() - 6));
                     SpritesU::drawPlusMaskFX(41, 39, Images::Bid_Bottom, (27 * 3) + currentPlane); 
 
                     if (dealer == Constants::HumanPlayer) {
-                        // bidder_X = 38 - (bid.getLevel() == 10 ? 2 : 0);
                         bidder_Y = 40;                       
                     }
 
@@ -241,11 +236,9 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Alone:
                 {
-                    // uint8_t idx = ((static_cast<uint8_t>(bid.getSuit()) * 5) + (bid.getLevel() - 6));
                     SpritesU::drawPlusMaskFX(41, 39, Images::Bid_Bottom, (28 * 3) + currentPlane); 
 
                     if (dealer == Constants::HumanPlayer) {
-                        // bidder_X = 38 - (bid.getLevel() == 10 ? 2 : 0);
                         bidder_Y = 40;                       
                     }
 
@@ -283,14 +276,12 @@ void renderBids(uint8_t currentPlane) {
 
         switch (bid.getBidType()) {
 
-            case BidType::Suit:
+            case BidType::Partner:
                 {
-                    // uint8_t idx = (((bid.getLevel() - 6) * 6) + (5 - static_cast<uint8_t>(bid.getSuit())));
                     SpritesU::drawPlusMaskFX(6, 16, Images::Bid_Left, (2 * 3) + currentPlane); 
 
                     if (dealer == 2) {
                         bidder_X = 8;
-                        // bidder_Y = 12 - (bid.getLevel() == 10 ? 2 : 0);                       
                     }
 
                 }
@@ -298,12 +289,10 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Alone:
                 {
-                    // uint8_t idx = (((bid.getLevel() - 6) * 6) + (5 - static_cast<uint8_t>(bid.getSuit())));
                     SpritesU::drawPlusMaskFX(6, 16, Images::Bid_Left, (1 * 3) + currentPlane); 
 
                     if (dealer == 2) {
                         bidder_X = 8;
-                        // bidder_Y = 12 - (bid.getLevel() == 10 ? 2 : 0);                       
                     }
 
                 }
@@ -339,13 +328,11 @@ void renderBids(uint8_t currentPlane) {
 
         switch (bid.getBidType()) {
 
-            case BidType::Suit:
+            case BidType::Partner:
                 {
-                    // uint8_t idx = ((static_cast<uint8_t>(bid.getSuit()) * 5) + (bid.getLevel() - 6));
                     SpritesU::drawPlusMaskFX(41, 6, Images::Bid_Top, (27 * 3) + currentPlane); 
 
                     if (dealer == 3) {
-                        // bidder_X = 61 + (bid.getLevel() == 10 ? 1 : 0);
                         bidder_Y = 6;                       
                     }
                     
@@ -354,11 +341,9 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Alone:
                 {
-                    // uint8_t idx = ((static_cast<uint8_t>(bid.getSuit()) * 5) + (bid.getLevel() - 6));
                     SpritesU::drawPlusMaskFX(41, 6, Images::Bid_Top, (28 * 3) + currentPlane); 
 
                     if (dealer == 3) {
-                        // bidder_X = 61 + (bid.getLevel() == 10 ? 1 : 0);
                         bidder_Y = 6;                       
                     }
                     

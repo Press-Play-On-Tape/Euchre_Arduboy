@@ -44,7 +44,7 @@ void handleKitty() {
         #endif
 
         uint8_t countOfSuit = this->getNumberOfCards_InSuit(suit);
-        uint8_t scoreOfSuit = this->getScoreOfCards_InSuit(suit, BidType::Suit);       
+        uint8_t scoreOfSuit = this->getScoreOfCards_InSuit(suit, BidType::Partner);       
 
         #if defined(DEBUG) && defined(DEBUG_HANDLEKITTY)
             DEBUG_PRINT(F(" count "));

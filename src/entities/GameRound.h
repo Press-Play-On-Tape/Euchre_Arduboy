@@ -25,7 +25,7 @@ struct GameRound {
         uint8_t round = 0;
         uint8_t firstPlayer = 0;
         uint8_t currentPlayer = 0;
-        uint8_t handCount = 10;
+        // uint8_t handCount = 10;
         uint8_t dealerIdx = 0;
         uint8_t winningBidIdx = Constants::WinningBid_None;   // Index to bid array ..
 
@@ -41,7 +41,7 @@ struct GameRound {
         uint8_t getRound()                                          { return this->round; }
         uint8_t getFirstPlayer_Idx()                                { return this->firstPlayer; }
         uint8_t getCurrentPlayer_Idx()                              { return this->currentPlayer; }
-        uint8_t getHandCount()                                      { return this->handCount; }
+        // uint8_t getHandCount()                                      { return this->handCount; }
         uint8_t getWinningBid_Idx()                                 { return this->winningBidIdx; }
         uint8_t getDealer_Idx()                                     { return this->dealerIdx; }
         // bool getPlayedJoker()                                       { return this->playedJoker; }
@@ -52,7 +52,7 @@ struct GameRound {
         void setRound(uint8_t val)                                  { this->round = val; }
         void setFirstPlayer_Idx(uint8_t val)                        { this->firstPlayer = val; }
         void setCurrentPlayer_Idx(uint8_t val)                      { this->currentPlayer = val; }
-        void setHandCount(uint8_t val)                              { this->handCount = val; }
+        // void setHandCount(uint8_t val)                              { this->handCount = val; }
         void setWinningBid_Idx(uint8_t val)                         { this->winningBidIdx = val; }
         void setDealer_Idx(uint8_t val)                             { this->dealerIdx = val % 4; }
         // void setPlayedJoker(bool val)                               { this->playedJoker = val; }
@@ -126,7 +126,7 @@ struct GameRound {
 
         //     switch (bid.getBidType()) {
             
-        //         case BidType::Suit:
+        //         case BidType::Partner:
 
         //             switch (getWinningBid_Team()) {
                     
@@ -185,7 +185,7 @@ struct GameRound {
 
             switch (winningBid.getBidType()) {
             
-                case BidType::Suit:
+                case BidType::Partner:
 
                     switch (tricks) {
                     
@@ -276,7 +276,7 @@ struct GameRound {
             this->currentPlayer = 0;
             // this->jokerSuit = Suit::None;
             // this->playedJoker = false;
-            this->handCount = 10;
+            // this->handCount = 10;
             this->highestBid.reset(Constants::No_Player);
 
             for (uint8_t i = 0; i < 4; i++) {
@@ -301,7 +301,7 @@ struct GameRound {
         
             this->firstPlayer = winningPlayer;
             this->currentPlayer = winningPlayer;
-            this->handCount--;
+            // this->handCount--;
 
         }
 
@@ -337,8 +337,9 @@ struct GameRound {
             if (rank == Rank::Right_Bower) {
 
                 if (suit == trumps) {
-                    
+                
                     rank = Rank::Jack;
+                    mask = 1 << static_cast<uint8_t>(rank); //SJH need to copy to 500
 
                     if ((this->playedCards[static_cast<uint8_t>(suit)] & mask) > 0) {
 
@@ -367,6 +368,8 @@ struct GameRound {
                         case Suit::Diamonds:    suit = Suit::Hearts; break;
                         case Suit::Hearts:      suit = Suit::Diamonds; break;
                     }
+
+                    mask = 1 << static_cast<uint8_t>(rank); //SJH need to copy to 500
 
                     if ((this->playedCards[static_cast<uint8_t>(suit)] & mask) > 0) {
 
@@ -776,7 +779,8 @@ struct GameRound {
 
             switch (bidType) {
             
-                case BidType::Suit:
+                case BidType::Partner:
+                case BidType::Alone:
 
                     if (this->hasHandBeenTrumped()) {
 
@@ -821,7 +825,7 @@ struct GameRound {
                                
                     #if defined(DEBUG) && defined(DEBUG_PLAYER_WINNING_HAND)
 
-                        DEBUG_PRINT(F(", BidType::Suit Win:"));
+                        DEBUG_PRINT(F(", BidType::Partner Win:"));
                         DEBUG_PRINTLN(returnIdx);
 
                     #endif
@@ -829,6 +833,7 @@ struct GameRound {
                     return returnIdx;
             
             }
+
 
         }
 

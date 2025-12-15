@@ -35,13 +35,6 @@ void continueBidding() {
             case GameState::Bid_Round1:
             case GameState::Bid_Player_Round1:
 
-                // for (uint8_t i = 0; i < 4; i++) {
-
-                //     gameRound.getBid(i).setBidType(BidType::None);
-
-                // }
-
-                // gameRound.clearKitty();
                 playerCurrentlyBidding = (playerCurrentlyBidding + 1) % 4;
                 gameState = GameState::Bid_Round_Delay;
                 game.setFrameCount(0);
@@ -58,6 +51,79 @@ void continueBidding() {
     
 }
 
+void incHand() {
+
+    uint8_t player = gameRound.getCurrentPlayer_Idx();
+
+    while (true) {
+
+        player = (player + 1) % 4;
+
+        if (game.players[player].isPlaying()) {
+
+            gameRound.setCurrentPlayer_Idx(player);
+            break;
+
+        }
+    
+    } 
+
+}
+
+void completeBid(uint8_t winningBidIdx, BidType bidType, Suit suit) {
+
+    gameRound.setWinningBid_Idx(winningBidIdx);
+    gameRound.getHighestBid().setPlayerIdx(winningBidIdx);
+    gameRound.getHighestBid().setBidType(bidType);
+    gameRound.getHighestBid().setSuit(suit);
+    gameRound.getBid(winningBidIdx).setBidType(bidType);
+    gameRound.getBid(winningBidIdx).setSuit(suit);
+
+
+
+    for (uint8_t i = 0; i < 4; i++) {
+
+        // Set is playing ..
+
+        if (bidType == BidType::Alone && (winningBidIdx + 2) % 4 == i) {
+            game.players[i].setPlaying(false);
+        }
+        else {
+            game.players[i].setPlaying(true);
+        }
+
+        for (uint8_t j = 0; j < game.players[i].getCardCount(); j++) {
+
+            game.players[i].getCard(j).setTrumps(suit);
+
+        }
+
+        game.players[i].sort();
+
+    }
+    
+    
+    uint8_t dealer = gameRound.getDealer_Idx();
+    uint8_t firstPlayer = dealer;
+
+    while (true) {
+
+        firstPlayer = (firstPlayer + 1) % 4;
+
+        if (game.players[firstPlayer].isPlaying()) break;
+    
+    } 
+
+    Serial.println(firstPlayer);
+
+    gameRound.setFirstPlayer_Idx(firstPlayer);
+    gameRound.setCurrentPlayer_Idx(firstPlayer);
+
+    game.setFrameCount(0);
+    kittyHighlight = 64;
+    selectedCard = 0;
+    
+}
 
 void play_Init() { 
 
@@ -97,14 +163,11 @@ void populateRotateDetails(uint8_t card) {
 }
 
 
-// 1 0 2
-// 1 8 3
 uint8_t getCardIdx(uint8_t player, uint8_t offset, uint8_t cardsToBeDealt) {
 
     uint8_t dealer = gameRound.getDealer_Idx();
     return (cardsToBeDealt * ((player - dealer + 3) % 4)) + offset;
-// = (2* ((1 - 1 + 3) % 4)) = 6
-// = (3* ((1 - 1 + 3) % 4)) = 9 + 8 = 17
+
 }
 
 // ----------------------------------------------------------------------------
@@ -132,10 +195,10 @@ void play_Update() {
                 game.players[player].reset();
             }
 
-//            gameRound.setDealer_Idx(gameRound.getDealer_Idx() + 1); //SJH
-//            playerCurrentlyBidding = (gameRound.getDealer_Idx() + 1) % 4;
-            gameRound.setDealer_Idx(2); //SJH
-            playerCurrentlyBidding = (2 + 1) % 4;
+            gameRound.setDealer_Idx(gameRound.getDealer_Idx() + 1); 
+            playerCurrentlyBidding = (gameRound.getDealer_Idx() + 1) % 4;
+            // gameRound.setDealer_Idx(2); //SJH
+            // playerCurrentlyBidding = (2 + 1) % 4;
 
             if (gameRound.getDealer_Idx() == 0) {
                 populateRotateDetails(0);
@@ -333,101 +396,31 @@ void play_Update() {
                 if (!isHuman) {
                     
                     if (game.getFrameCount() == 4) { //SJH 32
-
-                        // Serial.print("Player: ");
-                        // Serial.print(playerCurrentlyBidding);
-                        // Serial.print(" = ");
                         
                         bid = game.players[playerCurrentlyBidding].bid(gameRound.getKitty()->getSuit(), *gameRound.getKitty(), false);
                                         
-                        if (bid >= 180) {
+                        if (bid >= 180) { //SJH 180
 
                             #ifdef DEBUG
                             DEBUG_PRINTLN("Go Alone");
                             #endif
-                        
-                            uint8_t winningBidIdx = playerCurrentlyBidding;
-
-                            gameRound.setWinningBid_Idx(winningBidIdx);
-                            gameRound.getHighestBid().setPlayerIdx(winningBidIdx);
-                            gameRound.getHighestBid().setBidType(BidType::Suit);
-                            gameRound.getHighestBid().setSuit(gameRound.getKitty()->getSuit());
-                            gameRound.getBid(winningBidIdx).setBidType(BidType::Suit);
-                            gameRound.getBid(winningBidIdx).setSuit(gameRound.getKitty()->getSuit());
-
-                            // gameRound.setWinningBid_Idx(winningBidIdx);
-                            // gameRound.setFirstPlayer_Idx(winningBidIdx);
-                            // gameRound.setCurrentPlayer_Idx(winningBidIdx);
-                            // gameRound.getBid(winningBidIdx).setBidType(BidType::Alone);
-                            // gameRound.getBid(winningBidIdx).setSuit(gameRound.getKitty()->getSuit());
 
                             game.players[dealer].addCard(gameRound.getKitty());
                             game.players[dealer].getCard(5).setSelected(true);
 
-                            for (uint8_t i = 0; i < 4; i++) {
-
-                                for (uint8_t j = 0; j < game.players[i].getCardCount(); j++) {
-                                
-                                    switch (gameRound.getWinningBid().getBidType()) {
-
-                                        default:
-                                            game.players[i].getCard(j).setTrumps(gameRound.getWinningBid().getSuit());
-                                            break;
-                                    
-                                    }
-                                }
-                                
-                                game.players[i].sort();
-
-                            }
-                            
-                            game.setFrameCount(0);
+                            completeBid(playerCurrentlyBidding, BidType::Partner, gameRound.getKitty()->getSuit());
                             gameState = GameState::Handle_Kitty;
-                            kittyHighlight = 64;
-                            selectedCard = 0;
 
                         }
-                        else if (bid >= 150) { 
+                        else if (bid >= 150) {
                         
                             #ifdef DEBUG
                             DEBUG_PRINTLN("Go!");
                             #endif
                         
-                            uint8_t winningBidIdx = playerCurrentlyBidding;
-
-
-                            gameRound.setWinningBid_Idx(winningBidIdx);
-                            gameRound.getHighestBid().setPlayerIdx(winningBidIdx);
-                            gameRound.getHighestBid().setBidType(BidType::Suit);
-                            gameRound.getHighestBid().setSuit(gameRound.getKitty()->getSuit());
-                            gameRound.getBid(winningBidIdx).setBidType(BidType::Suit);
-                            gameRound.getBid(winningBidIdx).setSuit(gameRound.getKitty()->getSuit());
-
-                            game.players[dealer].addCard(gameRound.getKitty());
-                            game.players[dealer].getCard(5).setSelected(true);
-
-                            for (uint8_t i = 0; i < 4; i++) {
-
-                                for (uint8_t j = 0; j < game.players[i].getCardCount(); j++) {
-                                
-                                    switch (gameRound.getWinningBid().getBidType()) {
-
-                                        default:
-                                            game.players[i].getCard(j).setTrumps(gameRound.getWinningBid().getSuit());
-                                            break;
-                                    
-                                    }
-                                }
-
-                                game.players[i].sort();
-
-                            }
-                            
-                            game.setFrameCount(0);
+                            completeBid(playerCurrentlyBidding, BidType::Partner, gameRound.getKitty()->getSuit());
                             gameState = GameState::Handle_Kitty;
-                            kittyHighlight = 64;
-                            selectedCard = 0;
-
+                        
                         }
                         else {
 
@@ -462,7 +455,7 @@ void play_Update() {
                     //             bidInput.setMode(BidMode::Misere);
                     //             break;
                                             
-                    //         case BidType::Suit:
+                    //         case BidType::Partner:
                     //             bidInput.setLevel(retBid.getLevel() - 6);
                     //             bidInput.setSuit(static_cast<uint8_t>(retBid.getSuit()));
                     //             bidInput.setMode(BidMode::Bid);
@@ -524,13 +517,6 @@ void play_Update() {
 
                         for (uint8_t s = 0; s < 4; s++) {
 
-                            // Serial.print("Player ");
-                            // Serial.print(playerCurrentlyBidding);
-                            // Serial.print(", Score ");
-                            // Serial.print(s);
-                            // Serial.print(" ");
-                            // Serial.println(scores[s]);
-
                             if (scores[s] > bid) {
                                 bid = scores[s];
                                 bidSuit = static_cast<Suit>(s);
@@ -538,43 +524,14 @@ void play_Update() {
 
                         }
 
-                
                         if (bid >= 180) {
 
                             #ifdef DEBUG
                             DEBUG_PRINTLN("Go Alone");
                             #endif
                         
-                            uint8_t winningBidIdx = playerCurrentlyBidding;
-
-                            gameRound.setWinningBid_Idx(winningBidIdx);
-                            gameRound.getHighestBid().setPlayerIdx(winningBidIdx);
-                            gameRound.getHighestBid().setBidType(BidType::Alone);
-                            gameRound.getHighestBid().setSuit(bidSuit);
-                            gameRound.getBid(winningBidIdx).setBidType(BidType::Alone);
-                            gameRound.getBid(winningBidIdx).setSuit(bidSuit);
-
-                            for (uint8_t i = 0; i < 4; i++) {
-
-                                for (uint8_t j = 0; j < game.players[i].getCardCount(); j++) {
-                                
-                                    switch (gameRound.getWinningBid().getBidType()) {
-
-                                        default:
-                                            game.players[i].getCard(j).setTrumps(gameRound.getWinningBid().getSuit());
-                                            break;
-                                    
-                                    }
-                                }
-                                
-                                game.players[i].sort();
-
-                            }
-                            
-                            game.setFrameCount(0);
+                            completeBid(playerCurrentlyBidding, BidType::Alone, bidSuit);
                             gameState = GameState::Play_Round_Start;
-                            kittyHighlight = 64;
-                            selectedCard = 0;
 
                         }
                         else if (bid >= 150) {
@@ -583,37 +540,8 @@ void play_Update() {
                             DEBUG_PRINTLN("Go!");
                             #endif
                         
-                            uint8_t winningBidIdx = playerCurrentlyBidding;
-
-
-                            gameRound.setWinningBid_Idx(winningBidIdx);
-                            gameRound.getHighestBid().setPlayerIdx(winningBidIdx);
-                            gameRound.getHighestBid().setBidType(BidType::Suit);
-                            gameRound.getHighestBid().setSuit(bidSuit);
-                            gameRound.getBid(winningBidIdx).setBidType(BidType::Suit);
-                            gameRound.getBid(winningBidIdx).setSuit(bidSuit);
-
-                            for (uint8_t i = 0; i < 4; i++) {
-
-                                for (uint8_t j = 0; j < game.players[i].getCardCount(); j++) {
-                                
-                                    switch (gameRound.getWinningBid().getBidType()) {
-
-                                        default:
-                                            game.players[i].getCard(j).setTrumps(gameRound.getWinningBid().getSuit());
-                                            break;
-                                    
-                                    }
-                                }
-
-                                game.players[i].sort();
-
-                            }
-                            
-                            game.setFrameCount(0);
+                            completeBid(playerCurrentlyBidding, BidType::Partner, bidSuit);
                             gameState = GameState::Play_Round_Start;
-                            kittyHighlight = 64;
-                            selectedCard = 0;
 
                         }
                         else {
@@ -649,7 +577,7 @@ void play_Update() {
                     //             bidInput.setMode(BidMode::Misere);
                     //             break;
                                             
-                    //         case BidType::Suit:
+                    //         case BidType::Partner:
                     //             bidInput.setLevel(retBid.getLevel() - 6);
                     //             bidInput.setSuit(static_cast<uint8_t>(retBid.getSuit()));
                     //             bidInput.setMode(BidMode::Bid);
@@ -687,39 +615,11 @@ void play_Update() {
 
                     if (bidInput.getMode() == BidMode::Bid || bidInput.getMode() == BidMode::Alone) {
 
-                        uint8_t winningBidIdx = 1;
-
-                        gameRound.setWinningBid_Idx(winningBidIdx);
-                        gameRound.getHighestBid().setPlayerIdx(winningBidIdx);
-                        gameRound.getHighestBid().setBidType(BidType::Suit);
-                        gameRound.getHighestBid().setSuit(gameRound.getKitty()->getSuit());
-                        gameRound.getBid(winningBidIdx).setBidType(BidType::Suit);
-                        gameRound.getBid(winningBidIdx).setSuit(gameRound.getKitty()->getSuit());
-
                         game.players[dealer].addCard(gameRound.getKitty());
                         game.players[dealer].getCard(5).setSelected(true);
 
-                        for (uint8_t i = 0; i < 4; i++) {
-
-                            for (uint8_t j = 0; j < game.players[i].getCardCount(); j++) {
-                            
-                                switch (gameRound.getWinningBid().getBidType()) {
-
-                                    default:
-                                        game.players[i].getCard(j).setTrumps(gameRound.getWinningBid().getSuit());
-                                        break;
-                                
-                                }
-                            }
-
-                            game.players[i].sort();
-
-                        }
-                        
-                        game.setFrameCount(0);
+                        completeBid(1, bidInput.getBidType(), gameRound.getKitty()->getSuit());
                         gameState = GameState::Handle_Kitty;
-                        kittyHighlight = 64;
-                        selectedCard = 0;
 
                     }
 
@@ -748,25 +648,25 @@ void play_Update() {
                         
                 if (justPressed & UP_BUTTON) {
                 
-                    if (bidInput.getMode() == BidMode::Suit)        bidInput.incSuit();
-                    else if (bidInput.getMode() > BidMode::Pass)    bidInput.decMode();
+                    if (bidInput.getMode() == BidMode::SuitSelect)          bidInput.incSuit();
+                    else if (bidInput.getMode() > BidMode::Pass)            bidInput.decMode();
 
                 }
 
                 else if (justPressed & DOWN_BUTTON) {
 
-                    if (bidInput.getMode() == BidMode::Suit)          bidInput.decSuit();
-                    else if (bidInput.getMode() < BidMode::Alone)     bidInput.incMode();
+                    if (bidInput.getMode() == BidMode::SuitSelect)          bidInput.decSuit();
+                    else if (bidInput.getMode() < BidMode::Alone)           bidInput.incMode();
 
                 }
 
-                else if (justPressed & LEFT_BUTTON) {
+                else if (justPressed & LEFT_BUTTON && bidInput.getMode() != BidMode::SuitSelect) {
                 
-                    bidInput.setMode(BidMode::Suit);
+                    bidInput.setMode(BidMode::SuitSelect);
 
                 }
 
-                else if ((justPressed & RIGHT_BUTTON) && bidInput.getMode() == BidMode::Suit) {
+                else if ((justPressed & RIGHT_BUTTON) && bidInput.getMode() == BidMode::SuitSelect) {
                 
                     bidInput.setMode(bidInput.getPrevMode());
 
@@ -776,53 +676,8 @@ void play_Update() {
 
                     if (bidInput.getMode() == BidMode::Bid || bidInput.getMode() == BidMode::Alone) {
 
-                        uint8_t winningBidIdx = 1;
-
-                        BidType bidType = BidType::None;
-
-                        switch (bidInput.getMode()) {
-
-                            case BidMode::Suit:
-                                bidType = BidType::Suit;
-                                break;
-
-                            case BidMode::Alone:
-                                bidType = BidType::Alone;
-                                break;
-
-                        }
-
-                        gameRound.setWinningBid_Idx(winningBidIdx);
-                        gameRound.getHighestBid().setPlayerIdx(winningBidIdx);
-                        gameRound.getHighestBid().setBidType(bidType);
-                        gameRound.getHighestBid().setSuit(bidInput.getSuit());
-                        gameRound.getBid(winningBidIdx).setBidType(bidType);
-                        gameRound.getBid(winningBidIdx).setSuit(bidInput.getSuit());
-
-                        game.players[dealer].addCard(gameRound.getKitty());
-                        game.players[dealer].getCard(5).setSelected(true);
-
-                        for (uint8_t i = 0; i < 4; i++) {
-
-                            for (uint8_t j = 0; j < game.players[i].getCardCount(); j++) {
-                            
-                                switch (gameRound.getWinningBid().getBidType()) {
-
-                                    default:
-                                        game.players[i].getCard(j).setTrumps(gameRound.getWinningBid().getSuit());
-                                        break;
-                                
-                                }
-                            }
-
-                            game.players[i].sort();
-
-                        }
-                        
-                        game.setFrameCount(0);
-                        gameState = GameState::Handle_Kitty;
-                        kittyHighlight = 64;
-                        selectedCard = 0;
+                        completeBid(1, bidInput.getBidType(), bidInput.getSuit());
+                        gameState = GameState::Play_Round_Start;
 
                     }
 
@@ -839,52 +694,6 @@ void play_Update() {
             }
 
             break;
-
-//         case GameState::Bid_Finished:
-//             {
-// Serial.println("Asdasd");            
-//                 if (game.getFrameCount() == 32) {
-
-//                     uint8_t dealer = gameRound.getDealer_Idx();
-//                     uint8_t firstPlayer = (dealer + 1) % 4;
-// Serial.println("SJH check above when alone");
-
-//                     gameRound.setWinningBid_Idx(winningBidIdx);
-//                     gameRound.setFirstPlayer_Idx(firstPlayer);
-//                     gameRound.setCurrentPlayer_Idx(firstPlayer);
-
-//                     game.players[winningBidIdx].addCard(gameRound.getKitty());
-//                     game.players[winningBidIdx].getCard(5).setSelected(true);
-//                     // game.players[winningBidIdx].getCard(11).setSelected(true);
-//                     // game.players[winningBidIdx].getCard(12).setSelected(true);
-
-//                     for (uint8_t i = 0; i < 4; i++) {
-
-//                         for (uint8_t j = 0; j < game.players[i].getCardCount(); j++) {
-                        
-//                             switch (gameRound.getWinningBid().getBidType()) {
-
-//                                 default:
-//                                     game.players[i].getCard(j).setTrumps(gameRound.getWinningBid().getSuit());
-//                                     break;
-                            
-//                             }
-//                         }
-
-//                         game.players[i].sort();
-
-//                     }
-                    
-//                     game.setFrameCount(0);
-//                     gameState = GameState::Handle_Kitty;
-//                     kittyHighlight = 64;
-//                     selectedCard = 0;
-
-//                 }
-
-//             }
-
-//             break;
 
         case GameState::Bid_Failed:
             
@@ -916,11 +725,6 @@ void play_Update() {
         case GameState::Handle_Kitty:
             {
                 uint8_t dealer = gameRound.getDealer_Idx();
-                uint8_t firstPlayer = (dealer + 1) % 4;
-// Serial.println("SJH check above when alone");
-
-                gameRound.setFirstPlayer_Idx(firstPlayer);
-                gameRound.setCurrentPlayer_Idx(firstPlayer);
 
                 if (dealer == Constants::HumanPlayer) {
 
@@ -969,20 +773,14 @@ void play_Update() {
 
                             if (game.players[Constants::HumanPlayer].getCard(i).isSelected()) {
 
-                                // gameRound.getKitty(kittyIndex)->setSuit(game.players[Constants::HumanPlayer].getCard(i).getSuit());
-                                // gameRound.getKitty(kittyIndex)->setRank(game.players[Constants::HumanPlayer].getCard(i).getRank());
-                                // gameRound.getKitty(kittyIndex)->setOrigSuit(game.players[Constants::HumanPlayer].getCard(i).getOrigSuit());
-                                // gameRound.getKitty(kittyIndex)->setOrigRank(game.players[Constants::HumanPlayer].getCard(i).getOrigRank());
-                                // gameRound.getKitty(kittyIndex)->setSelected(false);
                                 game.players[Constants::HumanPlayer].getCard(i).reset();
+                                game.players[Constants::HumanPlayer].sort();
+                                game.players[Constants::HumanPlayer].setCardCount(5);
                                 kittyIndex++;
 
                             }
 
                         }
-
-                        // game.players[Constants::HumanPlayer].sort();
-                        // gameRound.setRound(0);
 
                         if (!playerAssist) highlightSuitInHand();
                         gameState++;
@@ -1008,7 +806,6 @@ void play_Update() {
                         gameRound.setRound(0);
                         gameRound.clearKitty();
                         game.players[dealer].handleKitty();
-                        // game.players[gameRound.getWinningBid_Idx()].sort();
                         if (!playerAssist) highlightSuitInHand();
                         gameState++;
 
@@ -1049,8 +846,6 @@ void play_Update() {
 
                 // Select card in players hand ..
 
-                // if (selectedCard >= game.players[Constants::HumanPlayer].getCardCount()) selectedCard--;
-                // game.players[Constants::HumanPlayer].getCard(selectedCard).setSelected(true);
                 game.setFrameCount(0);
                 gameState++;
 
@@ -1116,6 +911,7 @@ void play_Update() {
                         }
 
                         gameState = GameState::Play_PlayerInput;
+
                     }
 
                 }
@@ -1151,7 +947,7 @@ void play_Update() {
 
                     switch (bid.getBidType()) {
                     
-                        case BidType::Suit:
+                        case BidType::Partner:
 
                             if (cardLed.getSuit() != cardPlayed.getSuit() && game.players[gameRound.getCurrentPlayer_Idx()].hasSuit(cardLed.getSuit())) {
 
@@ -1316,7 +1112,7 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
                 SpritesU::drawPlusMaskFX(29, 17, Images::Bid_Round2, (static_cast<uint8_t>(bidInput.getMode()) * 3) + currentPlane);
 
-                if (bidInput.getMode() == BidMode::Suit) {
+                if (bidInput.getMode() == BidMode::SuitSelect) {
                     SpritesU::drawOverwriteFX(34, 25, Images::Bid_Suits, (static_cast<uint8_t>(bidInput.getSuit()) * 3) + currentPlane);
                 }
                 else {
@@ -1328,15 +1124,6 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
             renderBids(currentPlane);
 
             break;
-
-        // case GameState::Bid_Finished:
-
-        //     renderPlayerHands(currentPlane, false, false);
-        //     renderKitty(currentPlane);
-        //     renderBids(currentPlane);
-        //     renderHUD(currentPlane, false, false);
-
-        //     break;
 
         case GameState::Bid_Failed:
 
@@ -1369,7 +1156,10 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
             renderPlayerHands(currentPlane, false, false);
             renderTableCards(currentPlane, Constants::NoWinner);
             renderHUD(currentPlane, false, true);
-            renderBids(currentPlane);
+
+            if (gameRound.getRound() == 0) {
+                renderBids(currentPlane);
+            }
             // renderDiscard(currentPlane);
 
             break;

@@ -25,7 +25,7 @@ uint8_t getPressedButtons() {
 
 void play_CardSelected() {
 
-    gameRound.setCurrentPlayer_Idx((gameRound.getCurrentPlayer_Idx() + 1) % 4);
+    incHand();
     gameState = GameState::Play_Hand;
 
 

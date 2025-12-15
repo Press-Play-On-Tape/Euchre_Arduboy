@@ -4,7 +4,7 @@
 #include "../utils/Constants.h"
 #include "../utils/Enums.h"
 #include "Card.h"
-#include "SuitPile.h"
+// #include "SuitPile.h"
 
 
 void playSuit_Follow(bool isHuman) {
@@ -446,6 +446,16 @@ void playSuit_Lead(bool isHuman) {
         #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
             DEBUG_PRINTLN(F("4. We did not win call."));
         #endif
+
+        if (this->playTop_InSuit(trumps, trumps, isHuman)) {
+
+            #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+                DEBUG_PRINTLN(F("5. Play top trump."));
+            #endif
+
+            return;
+
+        }
 
         // if (this->playJoker(trumps, isHuman))  {                                                                       // If you have the top trump, play it.
 

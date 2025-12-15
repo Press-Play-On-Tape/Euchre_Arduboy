@@ -5,25 +5,12 @@
 #include "../utils/Constants.h"
 #include "../utils/Enums.h"
 #include "Card.h"
-#include "SuitPile.h"
 #include "GameRound.h"
 
 
 
 // Trump cards -----------------------------------------------------------------
 
-
-// bool playJoker(Suit suit, bool isHuman) {
-
-//     for (uint8_t i = 0; i < this->cardCount; i++) {
-    
-//         Card &card = this->cards[i];
-
-//     }
-
-//     return false;
-
-// }
 
 bool isCardInTrick(Suit suit, Rank rank) {
 
@@ -313,7 +300,7 @@ bool playLowest_WithSecondHighest_InSuit(Suit trumps, Suit suitToFollow, bool is
     Rank highestUnplayedCard = Rank::None;
     Rank topRank = Rank::Ace;
 
-    for (Rank rank = Rank::Four; rank <= topRank; rank++) {
+    for (Rank rank = Rank::Nine; rank <= topRank; rank++) {
 
         if (trumps == suitToFollow && rank == Rank::Jack) continue;
 

@@ -51,7 +51,7 @@ struct Bid {
 
             // switch (this->getBidType()) {
             
-            //     case BidType::Suit:
+            //     case BidType::Partner:
             //         {
             //             uint16_t base = ((this->getLevel() - 6) * 100);
 
@@ -94,7 +94,7 @@ struct Bid {
         
             switch (this->getBidType()) {
 
-                // case BidType::Suit:
+                // case BidType::Partner:
                 //     return (static_cast<uint8_t>(this->suit) * 5) + (this->level - 6);
 
                 case BidType::Pass:

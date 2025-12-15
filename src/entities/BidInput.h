@@ -28,6 +28,25 @@ struct BidInput {
 
         }
 
+        BidType getBidType() {
+
+            switch (this->mode) {
+
+                case BidMode::Bid:
+                    return BidType::Partner;
+
+                case BidMode::Alone:
+                    return BidType::Alone;
+                    break;
+
+                case BidMode::Pass:
+                    return BidType::Pass;
+                    break;
+
+            }
+
+        }
+
         void incMode() {
             this->mode++;
         }

@@ -133,7 +133,7 @@ void DEBUG_PRINT_BID(BidType bidType, Suit suit) {
         
         switch (bidType) {
         
-            case BidType::Suit:
+            case BidType::Partner:
                 DEBUG_PRINT_SUIT(suit);
                 break;
         
