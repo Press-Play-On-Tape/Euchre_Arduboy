@@ -6,11 +6,11 @@
 #define DEBUG_PRINTLN  Serial.println
 #define DEBUG_BREAK    asm volatile("break\n");
 
-#define DEBUG
+#define _DEBUG
 #define _DEBUG_BID
-#define DEBUG_SKIP_DEAL
-#define DEBUG_BASIC
-#define DEBUG_RAND
+#define _DEBUG_SKIP_DEAL
+#define _DEBUG_BASIC
+#define _DEBUG_RAND
 
 
 // Bidding
@@ -33,13 +33,13 @@
 #define _DEBUG_PLAYER_WINNING_HAND
 #define _DEBUG_PLAYNOTRUMPS_LEAD
 #define _DEBUG_PLAYNOTRUMPS_FOLLOW
-#define DEBUG_PLAYSUIT_LEAD;
+#define _DEBUG_PLAYSUIT_LEAD;
 #define _DEBUG_PLAYSUIT_FOLLOW;
 #define _DEBUG_PLAYMISERE_LEAD
 #define _DEBUG_PLAYMISERE_FOLLOW
-#define DEBUG_MARKCARDPLAYED
+#define _DEBUG_MARKCARDPLAYED
 #define _DEBUG_HASCARDBEENPLAYED
-#define DEBUG_GETTOP_INSUIT
+#define _DEBUG_GETTOP_INSUIT
 #define _DEBUG_SORT
 #define _DEBUG_SORT_DETAIL
 #define _DEBUG_PLAY_ADDCARD

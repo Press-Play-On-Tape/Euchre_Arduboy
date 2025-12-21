@@ -376,7 +376,7 @@ void renderBids(uint8_t currentPlane) {
 
     if (bidder_X > 0) {
 
-        SpritesU::drawOverwriteFX(bidder_X, bidder_Y, Images::Dealer, currentPlane); 
+        SpritesU::drawPlusMaskFX(bidder_X, bidder_Y, Images::Dealer, currentPlane); 
 
     }
 

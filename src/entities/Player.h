@@ -19,8 +19,9 @@ struct Player {
     
         uint8_t playerNumber;
         uint8_t cardCount;
+        uint8_t cardCount_Backup;
         Card cards[6];
-        Card backup[5];
+        Card backup[6];
         bool playing = true;
 
     public:
@@ -74,21 +75,25 @@ struct Player {
 
         void backupHand() {
 
-            for (uint8_t i = 0; i < 5; i++) {
+            for (uint8_t i = 0; i < 6; i++) {
 
                 this->backup[i].init(this->cards[i].getSuit(), this->cards[i].getRank());
 
             }
 
+            this->cardCount_Backup = this->cardCount;
+
         }
 
         void restoreHand() {
 
-            for (uint8_t i = 0; i < 5; i++) {
+            for (uint8_t i = 0; i < 6; i++) {
 
                 this->cards[i].init(this->backup[i].getSuit(), this->backup[i].getRank());
 
             }
+
+            this->cardCount = this->cardCount_Backup;
 
         }
 
@@ -134,12 +139,12 @@ struct Player {
             this->backupHand();
 
             if (isDealer) {
-                this->cards[5].init(dealerCard.getCardIndex());
-                this->sortHand(this->cardCount + 1, true, suit);
+                this->cards[5].init(dealerCard.getSuit(), dealerCard.getRank());
+                this->cardCount++;
             }
-            else {
-                this->sortHand(this->cardCount, true, suit);
-            }
+
+            this->sortHand(this->cardCount, true, suit);
+
 
             #ifdef DEBUG_BID
                 // this->print(false);
@@ -428,6 +433,7 @@ struct Player {
             }
 
             this->restoreHand();
+
             #ifdef DEBUG_BID
             DEBUG_PRINT(" = ");
             DEBUG_PRINTLN(handScore);
@@ -436,8 +442,6 @@ struct Player {
             return handScore;
 
         }
-
-
 
         #include "Player_PlayCard.hpp"
         #include "Player_Utils.hpp"

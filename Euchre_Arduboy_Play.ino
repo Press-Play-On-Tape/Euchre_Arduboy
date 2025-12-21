@@ -1,6 +1,5 @@
 #include <ArduboyFX.h>  
 
-
 void continueBidding() {
 
     uint8_t passes = 0;
@@ -16,6 +15,7 @@ void continueBidding() {
         }
 
     }
+
 
     if (passes < 4) {
 
@@ -80,7 +80,6 @@ void completeBid(uint8_t winningBidIdx, BidType bidType, Suit suit) {
     gameRound.getBid(winningBidIdx).setSuit(suit);
 
 
-
     for (uint8_t i = 0; i < 4; i++) {
 
         // Set is playing ..
@@ -102,7 +101,6 @@ void completeBid(uint8_t winningBidIdx, BidType bidType, Suit suit) {
 
     }
     
-    
     uint8_t dealer = gameRound.getDealer_Idx();
     uint8_t firstPlayer = dealer;
 
@@ -113,8 +111,6 @@ void completeBid(uint8_t winningBidIdx, BidType bidType, Suit suit) {
         if (game.players[firstPlayer].isPlaying()) break;
     
     } 
-
-    Serial.println(firstPlayer);
 
     gameRound.setFirstPlayer_Idx(firstPlayer);
     gameRound.setCurrentPlayer_Idx(firstPlayer);
@@ -136,6 +132,9 @@ void play_Init() {
     uint16_t r = random(8000);
     // DEBUG_PRINT("Rand ");
     // DEBUG_PRINTLN(r);
+    Serial.print("Rand: ");
+    Serial.println(r);
+    r=2559;
     randomSeed(r);
     game.setRandomSeed(r);
     // #endif
@@ -288,6 +287,7 @@ void play_Update() {
       
             case GameState::Play_Deal_08 ... GameState::Play_Deal_19:
                 {
+
                     uint8_t dealer = gameRound.getDealer_Idx();
                     uint8_t card = static_cast<uint8_t>(gameState) - static_cast<uint8_t>(GameState::Play_Deal_00);
 
@@ -365,6 +365,7 @@ void play_Update() {
 
         case GameState::Play_Deal_Catchup:
 
+
             for (uint8_t player = 0; player < 4; player++) {
 
                 while (game.players[player].getCardCount() < 5) {
@@ -380,26 +381,83 @@ void play_Update() {
             game.setFrameCount(0);
             gameState = GameState::Bid_Round1;
 
+
             for (uint8_t i = 0; i < 4; i++) {
                 game.players[i].sort();
             }
 
+            // game.players[0].getCard(0).setSuit(Suit::Spades);           game.players[0].getCard(0).setRank(Rank::Ten);
+            // game.players[0].getCard(1).setSuit(Suit::Spades);           game.players[0].getCard(1).setRank(Rank::Jack);
+            // game.players[0].getCard(2).setSuit(Suit::Spades);           game.players[0].getCard(2).setRank(Rank::Queen);
+            // game.players[0].getCard(3).setSuit(Suit::Diamonds);         game.players[0].getCard(3).setRank(Rank::Ten);
+            // game.players[0].getCard(4).setSuit(Suit::Diamonds);         game.players[0].getCard(4).setRank(Rank::Queen);
+
+            // game.players[1].getCard(0).setSuit(Suit::Spades);           game.players[1].getCard(0).setRank(Rank::Ace);
+            // game.players[1].getCard(1).setSuit(Suit::Diamonds);         game.players[1].getCard(1).setRank(Rank::Jack);
+            // game.players[1].getCard(2).setSuit(Suit::Diamonds);         game.players[1].getCard(2).setRank(Rank::Ace);
+            // game.players[1].getCard(3).setSuit(Suit::Clubs);            game.players[1].getCard(3).setRank(Rank::Ace);
+            // game.players[1].getCard(4).setSuit(Suit::Hearts);           game.players[1].getCard(4).setRank(Rank::Jack);
+
+            // game.players[2].getCard(0).setSuit(Suit::Spades);           game.players[2].getCard(0).setRank(Rank::Nine);
+            // game.players[2].getCard(1).setSuit(Suit::Diamonds);         game.players[2].getCard(1).setRank(Rank::King);
+            // game.players[2].getCard(2).setSuit(Suit::Clubs);            game.players[2].getCard(2).setRank(Rank::Ten);
+            // game.players[2].getCard(3).setSuit(Suit::Hearts);           game.players[2].getCard(3).setRank(Rank::Nine);
+            // game.players[2].getCard(4).setSuit(Suit::Hearts);           game.players[2].getCard(4).setRank(Rank::Ten);
+
+            // game.players[3].getCard(0).setSuit(Suit::Spades);           game.players[3].getCard(0).setRank(Rank::King);
+            // game.players[3].getCard(1).setSuit(Suit::Diamonds);         game.players[3].getCard(1).setRank(Rank::Nine);
+            // game.players[3].getCard(2).setSuit(Suit::Hearts);           game.players[3].getCard(2).setRank(Rank::Queen);
+            // game.players[3].getCard(3).setSuit(Suit::Hearts);           game.players[3].getCard(3).setRank(Rank::King);
+            // game.players[3].getCard(4).setSuit(Suit::Hearts);           game.players[3].getCard(4).setRank(Rank::Ace);
+
+            // gameRound.getKitty()->setSuit(Suit::Clubs);
+            // gameRound.getKitty()->setRank(Rank::King);
+            // gameRound.getKitty()->setOrigSuit(Suit::Clubs);
+            // gameRound.getKitty()->setOrigRank(Rank::King);
+
+            // game.players[0].getCard(0).setSuit(Suit::Diamonds);         game.players[0].getCard(0).setRank(Rank::Queen);
+            // game.players[0].getCard(1).setSuit(Suit::Clubs);            game.players[0].getCard(1).setRank(Rank::King);
+            // game.players[0].getCard(2).setSuit(Suit::Hearts);           game.players[0].getCard(2).setRank(Rank::King);
+            // game.players[0].getCard(3).setSuit(Suit::Clubs);            game.players[0].getCard(3).setRank(Rank::Nine);
+            // game.players[0].getCard(4).setSuit(Suit::Diamonds);         game.players[0].getCard(4).setRank(Rank::Nine);
+
+            // game.players[1].getCard(0).setSuit(Suit::Spades);           game.players[1].getCard(0).setRank(Rank::Nine);
+            // game.players[1].getCard(1).setSuit(Suit::Diamonds);         game.players[1].getCard(1).setRank(Rank::Ten);
+            // game.players[1].getCard(2).setSuit(Suit::Hearts);           game.players[1].getCard(2).setRank(Rank::Nine);
+            // game.players[1].getCard(3).setSuit(Suit::Hearts);           game.players[1].getCard(3).setRank(Rank::Jack);
+            // game.players[1].getCard(4).setSuit(Suit::Hearts);           game.players[1].getCard(4).setRank(Rank::Queen);
+
+            // game.players[2].getCard(0).setSuit(Suit::Spades);           game.players[2].getCard(0).setRank(Rank::Jack);
+            // game.players[2].getCard(1).setSuit(Suit::Diamonds);         game.players[2].getCard(1).setRank(Rank::Ace);
+            // game.players[2].getCard(2).setSuit(Suit::Clubs);            game.players[2].getCard(2).setRank(Rank::Ace);
+            // game.players[2].getCard(3).setSuit(Suit::Hearts);           game.players[2].getCard(3).setRank(Rank::Ten);
+            // game.players[2].getCard(4).setSuit(Suit::Clubs);            game.players[2].getCard(4).setRank(Rank::Queen);
+
+            // game.players[3].getCard(0).setSuit(Suit::Diamonds);         game.players[3].getCard(0).setRank(Rank::Jack);
+            // game.players[3].getCard(1).setSuit(Suit::Spades);           game.players[3].getCard(1).setRank(Rank::King);
+            // game.players[3].getCard(2).setSuit(Suit::Diamonds);         game.players[3].getCard(2).setRank(Rank::King);
+            // game.players[3].getCard(3).setSuit(Suit::Spades);           game.players[3].getCard(3).setRank(Rank::Ace);
+            // game.players[3].getCard(4).setSuit(Suit::Spades);           game.players[3].getCard(4).setRank(Rank::Ten);
+
+            // gameRound.getKitty()->setSuit(Suit::Hearts);
+            // gameRound.getKitty()->setRank(Rank::Ace);
+            // gameRound.getKitty()->setOrigSuit(Suit::Hearts);
+            // gameRound.getKitty()->setOrigRank(Rank::Ace);
             break;
 
         case GameState::Bid_Round1:
             {
-
                 bool isHuman = playerCurrentlyBidding == Constants::HumanPlayer;
                 uint8_t dealer = gameRound.getDealer_Idx();
                 uint16_t bid = 0;
 
                 if (!isHuman) {
                     
-                    if (game.getFrameCount() == 4) { //SJH 32
-                        
-                        bid = game.players[playerCurrentlyBidding].bid(gameRound.getKitty()->getSuit(), *gameRound.getKitty(), false);
-                                        
-                        if (bid >= 180) { //SJH 180
+                    if (game.getFrameCount() == 24) { 
+                   
+                        bid = game.players[playerCurrentlyBidding].bid(gameRound.getKitty()->getSuit(), *gameRound.getKitty(), playerCurrentlyBidding == dealer);
+                             
+                        if (bid >= 180) { 
 
                             #ifdef DEBUG
                             DEBUG_PRINTLN("Go Alone");
@@ -408,7 +466,7 @@ void play_Update() {
                             game.players[dealer].addCard(gameRound.getKitty());
                             game.players[dealer].getCard(5).setSelected(true);
 
-                            completeBid(playerCurrentlyBidding, BidType::Partner, gameRound.getKitty()->getSuit());
+                            completeBid(playerCurrentlyBidding, BidType::Alone, gameRound.getKitty()->getSuit());
                             gameState = GameState::Handle_Kitty;
 
                         }
@@ -417,6 +475,9 @@ void play_Update() {
                             #ifdef DEBUG
                             DEBUG_PRINTLN("Go!");
                             #endif
+
+                            game.players[dealer].addCard(gameRound.getKitty());
+                            game.players[dealer].getCard(5).setSelected(true);
                         
                             completeBid(playerCurrentlyBidding, BidType::Partner, gameRound.getKitty()->getSuit());
                             gameState = GameState::Handle_Kitty;
@@ -436,34 +497,27 @@ void play_Update() {
                 }
                 else {
 
-                    // if (playerAssist) {
-                        
-                    //     Bid &highestBid = gameRound.getHighestBid();
-                    //     Bid &previousBid = gameRound.getBid(playerCurrentlyBidding);
-                    //     Bid &partnerBid = gameRound.getBid((playerCurrentlyBidding + 2) % 4);
+                    if (playerAssist) {
 
-                    //     Bid retBid = game.players[playerCurrentlyBidding].bid(previousBid, partnerBid, highestBid);
-                    //     previousBid.setBid(retBid);
-                
-                    //     switch (retBid.getBidType()) {
+                        uint16_t retBid = game.players[playerCurrentlyBidding].bid(gameRound.getKitty()->getSuit(), *gameRound.getKitty(), dealer == 1);
+               
+                        switch (retBid) {
                                             
-                    //         case BidType::Pass:
-                    //             bidInput.setMode(BidMode::Pass);
-                    //             break;
+                            case 180 ... 999:
+                                bidInput.setMode(BidMode::Alone);
+                                break;
                                             
-                    //         case BidType::Misere:
-                    //             bidInput.setMode(BidMode::Misere);
-                    //             break;
+                            case 150 ... 179:
+                                bidInput.setMode(BidMode::Bid);
+                                break;
                                             
-                    //         case BidType::Partner:
-                    //             bidInput.setLevel(retBid.getLevel() - 6);
-                    //             bidInput.setSuit(static_cast<uint8_t>(retBid.getSuit()));
-                    //             bidInput.setMode(BidMode::Bid);
-                    //             break;
+                            default:
+                                bidInput.setMode(BidMode::Pass);
+                                break;
 
-                    //     }
+                        }
 
-                    // }
+                    }
 
                     gameState++;
 
@@ -489,7 +543,6 @@ void play_Update() {
                 gameRound.clearKitty();
                 game.setFrameCount(0);
                 gameState++;
-                
             }
             break;
 
@@ -504,7 +557,7 @@ void play_Update() {
 
                 if (!isHuman) {
                     
-                    if (game.getFrameCount() == 4) { //SJH 32
+                    if (game.getFrameCount() == 24) {
 
                         for (uint8_t s = 0; s < 4; s++) {
 
@@ -661,7 +714,6 @@ void play_Update() {
                 }
 
                 else if (justPressed & LEFT_BUTTON && bidInput.getMode() != BidMode::SuitSelect) {
-                
                     bidInput.setMode(BidMode::SuitSelect);
 
                 }
@@ -857,13 +909,23 @@ void play_Update() {
             {
                 bool isHuman = gameRound.getCurrentPlayer_Idx() == Constants::HumanPlayer;
 
-                if (game.getFrameCount() == 32 || isHuman) {
+                if (game.getFrameCount() == 24 || isHuman) {
 
                     if (gameRound.getFirstPlayer_Idx() == gameRound.getCurrentPlayer_Idx()) {
-                        game.players[gameRound.getCurrentPlayer_Idx()].playSuit_Lead(isHuman);
+                        if (gameRound.getWinningBid().getBidType() == BidType::Partner) {
+                            game.players[gameRound.getCurrentPlayer_Idx()].playSuit_Lead(isHuman);
+                        }
+                        else {
+                            game.players[gameRound.getCurrentPlayer_Idx()].playSuit_Lead_Alone(isHuman);
+                        }
                     }
                     else {
-                        game.players[gameRound.getCurrentPlayer_Idx()].playSuit_Follow(isHuman);
+                        if (gameRound.getWinningBid().getBidType() == BidType::Partner) {
+                            game.players[gameRound.getCurrentPlayer_Idx()].playSuit_Follow(isHuman);
+                        }
+                        else {
+                            game.players[gameRound.getCurrentPlayer_Idx()].playSuit_Follow_Alone(isHuman);
+                        }
                     }
 
                     #ifdef DEBUG_BASIC

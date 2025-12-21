@@ -834,7 +834,6 @@ void sort() {
 
     }
 
-
     this->cardCount = 0;
     
     for (uint8_t i = 0; i < 6; i++) {

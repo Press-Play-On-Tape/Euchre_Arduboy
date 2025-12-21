@@ -75,6 +75,7 @@ void setup() {
     game.gameRound = &gameRound;
 
     game.setFrameCount(0);
+    Serial.begin(9600);
 
 }
 

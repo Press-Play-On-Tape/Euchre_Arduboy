@@ -337,6 +337,75 @@ void playSuit_Follow(bool isHuman) {
 
 }
 
+
+void playSuit_Follow_Alone(bool isHuman) {
+
+    #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_FOLLOW)
+    DEBUG_PRINT(F("Suit - P"));
+    DEBUG_PRINT(this->playerNumber);
+    DEBUG_PRINTLN(F(" -----------------------"));
+    #endif
+
+    uint8_t partnerIdx = (this->getPlayerNumber() + 2) % 4;
+    uint8_t playerBeforeIdx = (this->getPlayerNumber() + 3) % 4;
+    uint8_t playerAfterIdx = (this->getPlayerNumber() + 1) % 4;
+
+    Suit trumps = this->gameRound->winningBid_Suit();
+    Card largestTrump = this->gameRound->getLargestTrumpInPlay(trumps);
+    Card cardLed = this->gameRound->getCardLed();
+    Suit cardLedSuit = cardLed.getSuit();
+
+
+    if (this->gameRound->hasTrumpsBeenLed()) {
+
+        #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_FOLLOW)
+            DEBUG_PRINTLN(F("22. Trump has been led."));
+        #endif
+
+        if (this->playTop_InSuit(trumps, trumps, isHuman))                                                     return; // If we have the winning trump then play it ..
+        else if (this->playNextHighest_LargerThan_InSuit(trumps, largestTrump.getRank(), isHuman))             return; // Win hand with lowest possible trump ..
+        else if (this->playLowest_InSuit(trumps, isHuman))                                                     return; // Follow suit ..
+        else if (this->playLowest_AllSuit(trumps, isHuman))                                                    return; // Throw rubbish ..
+
+    }
+    else {
+
+        #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_FOLLOW)
+            DEBUG_PRINTLN(F("23. Trump has not been led."));
+        #endif
+
+        if (this->gameRound->hasHandBeenTrumped()) {
+
+            #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_FOLLOW)
+                DEBUG_PRINTLN(F("22. Hand has been trumped."));
+            #endif
+// Serial.print("larget trump ");
+// DEBUG_PRINT_CARD(largestTrump.getSuit(),largestTrump.getRank());
+            if (this->playNextHighest_LargerThan_InSuit(trumps, largestTrump.getRank(), isHuman))              return; // Win hand with lowest possible trump ..
+            else if (this->playLowest_InSuit(cardLedSuit, isHuman))                                            return; // Follow suit ..
+            else if (this->playLowest_AllSuit(trumps, isHuman))                                                return; // Throw rubbish ..
+
+        }
+        else {
+
+            #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_FOLLOW)
+                DEBUG_PRINTLN(F("24. Hand has not been trumped."));
+            #endif
+
+            Card &largestCard = this->gameRound->getLargestCardInPlay(cardLedSuit);
+
+            if (this->playTop_InSuit(trumps, cardLedSuit, isHuman))                                            return; // If we have the winning card in suit then play it ..
+            else if (this->playNextHighest_LargerThan_InSuit(cardLedSuit, largestCard.getRank(), isHuman))     return; // Play a slighlty higher card ..
+            else if (this->playLowest_InSuit(cardLedSuit, isHuman))                                            return; // play a small card ..
+            else if (this->playLowest_InSuit(trumps, isHuman))                                                 return; // Trump the hand with a small one ..
+            else if (this->playLowest_AllSuit(trumps, isHuman))                                                return; // Throw rubbish ..
+
+        }
+    
+    }
+
+}
+
 void playSuit_Lead(bool isHuman) {
 
     #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
@@ -369,8 +438,8 @@ void playSuit_Lead(bool isHuman) {
             #endif
 
             // if (this->playJoker(trumps, isHuman))                                                                 return;  // Conventional lead .. 
-            if (this->playLowest_LowerThan_InSuit(trumps, Rank::Ten, isHuman))                                    return; // Defer to partner with little trump ..
-            else if (this->playTop_AllSuit(trumps, isHuman))                                                      return; // Play a wining ace ..
+            // if (this->playLowest_LowerThan_InSuit(trumps, Rank::Ten, isHuman))                                    return; // Defer to partner with little trump ..
+            if (this->playTop_AllSuit(trumps, isHuman))                                                           return; // Play a wining ace ..
             else if (this->playLowest_WithSecondHighest_AllSuit(trumps, trumps, isHuman))                         return; // Play a small card from any other suit where you hold the second largest card in that suit.
             else if (this->playLowest_ExcludeSuit(trumps, suit1, suit2, isHuman))                                 return; // Play a small card from any other suit that the other team did not call.
             else if (this->playLowest_AllSuit(trumps, isHuman))                                                   return; // Play a small card from any other suit.
@@ -456,21 +525,6 @@ void playSuit_Lead(bool isHuman) {
             return;
 
         }
-
-        // if (this->playJoker(trumps, isHuman))  {                                                                       // If you have the top trump, play it.
-
-        //     #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
-        //         DEBUG_PRINTLN(F("5. Play Joker."));
-        //     #endif
-            
-        //     return; 
-
-        // } 
-
-
-        #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
-            DEBUG_PRINTLN(F("6. Can not play Joker."));
-        #endif
 
         for (Suit suit = Suit::Spades; suit <= Suit::Hearts; suit++) {                                                  // If you have the top card in another suit and your competitor has / maybe the suits, play it.
 
@@ -570,5 +624,183 @@ void playSuit_Lead(bool isHuman) {
     }
     
     // this->playJoker(trumps, isHuman);                                                                           return;
+
+}
+
+void playSuit_Lead_Alone(bool isHuman) {
+
+    #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+        DEBUG_PRINT(F("Suit - P"));
+        DEBUG_PRINT(this->playerNumber);
+        DEBUG_PRINTLN(F(" -----------------------"));
+    #endif
+
+    uint8_t partnerIdx = (this->getPlayerNumber() + 2) % 4;
+    uint8_t playerBeforeIdx = (this->getPlayerNumber() + 3) % 4;
+    uint8_t playerAfterIdx = (this->getPlayerNumber() + 1) % 4;
+
+    Suit trumps = this->gameRound->winningBid_Suit();
+    Card cardLed = this->gameRound->getCardLed();
+    Suit cardLedSuit = cardLed.getSuit();
+
+    Suit suit1 = this->gameRound->getHand(playerBeforeIdx)->getSuit(); // played by competitor 1
+    Suit suit2 = this->gameRound->getHand(playerAfterIdx)->getSuit(); // played by competitor 2
+
+    if (this->gameRound->weWonCall(this->getPlayerNumber(), partnerIdx)) {
+  
+        #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+            DEBUG_PRINTLN(F("1. We won the call."));
+        #endif
+
+        if (this->gameRound->isFirstRound()) {
+
+            #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+                DEBUG_PRINTLN(F("2. First round."));
+            #endif
+
+            if (this->playTop_AllSuit(trumps, isHuman))                                                           return; // Play a wining ace ..
+            else if (this->playLowest_WithSecondHighest_AllSuit(trumps, trumps, isHuman))                         return; // Play a small card from any other suit where you hold the second largest card in that suit.
+            else if (this->playLowest_ExcludeSuit(trumps, suit1, suit2, isHuman))                                 return; // Play a small card from any other suit that the other team did not call.
+            else if (this->playLowest_AllSuit(trumps, isHuman))                                                   return; // Play a small card from any other suit.
+            else if (this->playLowest_InSuit(trumps, isHuman))                                                    return; // Trump the hand with a small one ..
+
+        }
+        else {
+
+            #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+                DEBUG_PRINTLN(F("2. Not first round."));
+            #endif
+
+            TriState playerBeforeHasTrumps = this->gameRound->hasTrumps(trumps, playerBeforeIdx);
+            TriState playerAfterHasTrumps  = this->gameRound->hasTrumps(trumps, playerAfterIdx);
+            TriState partnerHasTrumps      = this->gameRound->hasTrumps(trumps, partnerIdx);
+            
+            if (playerBeforeHasTrumps != TriState::False || playerAfterHasTrumps != TriState::False) {                  // If either of your opponents have trumps ..
+
+                #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+                    DEBUG_PRINTLN(F("3. Competitor(s) may have trumps."));
+                #endif
+                
+                // bool hasJoker = this->getCard(Rank::TopCard);                                                             // If you have the joker then play it ..
+
+                // if (this->playJoker(trumps, isHuman))                                                           return;
+                if (this->playTop_InSuit(trumps, trumps, isHuman))                                              return; // Play the top trump if you have it ..
+                else if (this->playTop_AllSuit(trumps, isHuman))                                                return; // Play a wining ace ..
+                else if (this->playLowest_WithSecondHighest_AllSuit(trumps, trumps, isHuman))                   return; // Play a small card from any other suit where you hold the second largest card in that suit.
+                else if (this->playLowest_ExcludeSuit(trumps, suit1, suit2, isHuman))                           return; // Play a small card from any other suit that the other team did not call.
+                else if (this->playLowest_AllSuit(trumps, isHuman))                                             return; // Play a small card from any other suit.
+                else if (this->playLowest_InSuit(trumps, isHuman))                                              return; // Play a small card from any other suit.
+
+            }
+            else {                                                                                                      // Neither of your opponents have trumps ..
+
+                #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+                    DEBUG_PRINTLN(F("3. Competitors do not have trumps."));
+                #endif
+
+                if (this->playTop_AllSuit(trumps, isHuman))                                                     return; // Play a wining ace or highest card in suit..
+                else if (this->playLowest_WithSecondHighest_AllSuit(trumps, trumps, isHuman))                   return; // Play a small card from any other suit where you hold the second largest card in that suit.
+                else if (this->playLowest_ExcludeSuit(trumps, suit1, suit2, isHuman))                           return; // Play a small card from any other suit that the other team did not call.
+                if (this->playLowest_AllSuit(trumps, isHuman))                                                  return; // Play a small card from any other suit.
+                else if (this->playLowest_InSuit(trumps, isHuman))                                              return;
+
+            }
+
+        }
+
+    }
+    else {                                                                                                              // We did not win call 
+
+        #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+            DEBUG_PRINTLN(F("4. We did not win call."));
+        #endif
+
+        if (this->playTop_InSuit(trumps, trumps, isHuman)) {
+
+            #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+                DEBUG_PRINTLN(F("5. Play top trump."));
+            #endif
+
+            return;
+
+        }
+
+        for (Suit suit = Suit::Spades; suit <= Suit::Hearts; suit++) {                                                  // If you have the top card in another suit and your competitor has / maybe the suits, play it.
+
+            TriState hasSuit1 = this->gameRound->getHasSuitInHand(playerBeforeIdx, suit);
+            TriState hasSuit2 = this->gameRound->getHasSuitInHand(playerAfterIdx, suit);
+
+            if (hasSuit1 != TriState::False || hasSuit2 != TriState::False) {
+                
+                #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+                    DEBUG_PRINT(F("8. Play top where comp holds "));
+                    DEBUG_PRINT_SUIT(suit);
+                #endif
+                
+                if (this->playTop_InSuit(trumps, suit, isHuman)) {
+
+                    #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+                        DEBUG_PRINTLN(F(", success."));
+                    #endif
+                
+                    return; 
+
+                }
+                else {
+
+                    #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+                        DEBUG_PRINTLN(F(", fail."));
+                    #endif
+
+                }
+
+            }
+
+        }
+
+
+        for (Suit suit = Suit::Spades; suit <= Suit::Hearts; suit++) {                                              // If you have the top card in any suit play it ..                                      
+
+            TriState hasSuit1 = this->gameRound->getHasSuitInHand(playerBeforeIdx, suit);
+            TriState hasSuit2 = this->gameRound->getHasSuitInHand(playerAfterIdx, suit);
+
+            if (hasSuit1 == TriState::False && hasSuit2 == TriState::False) {
+                
+                #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+                    DEBUG_PRINT(F("9. Play top "));
+                    DEBUG_PRINT_SUIT(suit);
+                #endif
+                
+                if (this->playTop_InSuit(trumps, suit, isHuman)) {
+
+                    #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+                        DEBUG_PRINTLN(F(", success."));
+                    #endif
+                
+                    return; 
+
+                }
+                else {
+
+                    #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+                        DEBUG_PRINTLN(F(", fail."));
+                    #endif
+
+                }
+
+            }
+
+        }
+
+
+        #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_LEAD)
+            DEBUG_PRINTLN(F("11. Default play of cards."));
+        #endif
+        
+        if (this->playLowest_WithSecondHighest_AllSuit(trumps, trumps, isHuman))                                return; // Play a small card from any other suit where you hold the second largest card in that suit.
+        else if (this->playLowest_AllSuit(trumps, isHuman))                                                     return; // Play a small card from any other suit.
+        else if (this->playLowest_InSuit(trumps, isHuman))                                                      return; // Play your smallest trump.
+
+    }
 
 }
