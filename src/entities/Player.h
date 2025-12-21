@@ -108,9 +108,10 @@ struct Player {
 
         void reset() {
         
-            for (uint8_t i = 0; i < 5; i++) {
+            for (uint8_t i = 0; i < 6; i++) {
             
                 this->cards[i].reset();
+                this->backup[i].reset();
 
             }
 

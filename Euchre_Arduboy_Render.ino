@@ -61,17 +61,11 @@ void renderPlayerHands(uint8_t currentPlane, bool blinkSelected, bool blinkRaise
 
         }
 
-        // if (gameRound.getWinningBid_Idx() != Constants::WinningBid_None) {
-
-        //     SpritesU::drawOverwriteFX(104, 20, Images::Suit, (static_cast<uint8_t>(gameRound.getWinningBid().getSuit()) * 3) + currentPlane);
-
-        // }
-
     }
 
 
     if (game.players[2].getCardCount() > 0 && game.players[2].isPlaying()) {
-        SpritesU::drawOverwriteFX(0, 4, Images::Hand_Left, (game.players[2].getCardCount() * 3) + currentPlane);
+        SpritesU::drawOverwriteFX(0, 6, Images::Hand_Left, (game.players[2].getCardCount() * 3) + currentPlane);
     }
 
     if (game.players[3].getCardCount() > 0 && game.players[3].isPlaying()) {
@@ -79,7 +73,7 @@ void renderPlayerHands(uint8_t currentPlane, bool blinkSelected, bool blinkRaise
     }
 
     if (game.players[0].getCardCount() > 0 && game.players[0].isPlaying()) {
-        SpritesU::drawOverwriteFX(100, 4, Images::Hand_Right, (game.players[0].getCardCount() * 3) + currentPlane);
+        SpritesU::drawOverwriteFX(100, 6, Images::Hand_Right, (game.players[0].getCardCount() * 3) + currentPlane);
     }
 
 }
@@ -89,7 +83,7 @@ void renderKitty(uint8_t currentPlane) {
 
     if (gameRound.getKitty()->getRank() != Rank::None) {
 
-        SpritesU::drawPlusMaskFX(26, 16, Images::Cards_Bottom, gameRound.getKitty()->getCardIndex() + currentPlane);
+        SpritesU::drawPlusMaskFX(26, 14, Images::Cards_Bottom, gameRound.getKitty()->getCardIndex() + currentPlane);
 
     }
 
@@ -106,7 +100,7 @@ void renderDealer(uint8_t currentPlane) {
     switch (dealer) {
 
         case 0:
-            x = 91;
+            x = 93;
             y = 23;
             break;
 
@@ -116,7 +110,7 @@ void renderDealer(uint8_t currentPlane) {
             break;
 
         case 2:
-            x = 8;
+            x = 7;
             y = 23;
             break;
 
@@ -139,7 +133,7 @@ void renderDiscard(uint8_t currentPlane) {
     switch (dealer) {
     
         case 0:
-            SpritesU::drawPlusMaskFX(91, 13, Images::Bid_Right_Discard, currentPlane); 
+            SpritesU::drawPlusMaskFX(92, 13, Images::Bid_Right_Discard, currentPlane); 
             break;
 
         case 2:
@@ -168,11 +162,12 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Partner:
                 {
-                
-                    SpritesU::drawPlusMaskFX(91, 15, Images::Bid_Right, (1 * 3) + currentPlane); 
+               
+                    SpritesU::drawPlusMaskFX(92, 17, Images::Bid_Right, (1 * 3) + currentPlane); 
                 
                     if (dealer == 0) {
-                        bidder_X = 92;
+                        bidder_X = 93;
+                        bidder_Y = 6;  
                     }
                 
                 }
@@ -181,10 +176,11 @@ void renderBids(uint8_t currentPlane) {
             case BidType::Alone:
                 {
                 
-                    SpritesU::drawPlusMaskFX(91, 15, Images::Bid_Right, (0 * 3) + currentPlane); 
+                    SpritesU::drawPlusMaskFX(92, 17, Images::Bid_Right, (0 * 3) + currentPlane); 
                 
                     if (dealer == 0) {
-                        bidder_X = 92;
+                        bidder_X = 93;
+                        bidder_Y = 6;  
                     }
                 
                 }
@@ -192,11 +188,11 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Pass:
                 
-                SpritesU::drawPlusMaskFX(91, 15, Images::Bid_Right, (2 * 3) + currentPlane); 
+                SpritesU::drawPlusMaskFX(92, 17, Images::Bid_Right, (2 * 3) + currentPlane); 
                 
                 if (dealer == 0) {
-                    bidder_X = 92;
-                    bidder_Y = 37;  
+                    bidder_X = 93;
+                    bidder_Y = 10;  
                 }
 
                 break;
@@ -205,7 +201,7 @@ void renderBids(uint8_t currentPlane) {
             case BidType::None:
                 
                 if (dealer == 0) {
-                    bidder_X = 91;
+                    bidder_X = 93;
                     bidder_Y = 23;                  
                 }
 
@@ -224,7 +220,7 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Partner:
                 {
-                    SpritesU::drawPlusMaskFX(41, 39, Images::Bid_Bottom, (27 * 3) + currentPlane); 
+                    SpritesU::drawPlusMaskFX(41, 40, Images::Bid_Bottom, (27 * 3) + currentPlane); 
 
                     if (dealer == Constants::HumanPlayer) {
                         bidder_Y = 40;                       
@@ -236,7 +232,7 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Alone:
                 {
-                    SpritesU::drawPlusMaskFX(41, 39, Images::Bid_Bottom, (28 * 3) + currentPlane); 
+                    SpritesU::drawPlusMaskFX(41, 40, Images::Bid_Bottom, (28 * 3) + currentPlane); 
 
                     if (dealer == Constants::HumanPlayer) {
                         bidder_Y = 40;                       
@@ -247,7 +243,7 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Pass:
 
-                SpritesU::drawPlusMaskFX(41, 39, Images::Bid_Bottom, (26 * 3) + currentPlane); 
+                SpritesU::drawPlusMaskFX(41, 40, Images::Bid_Bottom, (26 * 3) + currentPlane); 
 
                 if (dealer == Constants::HumanPlayer) {
                     bidder_X = 35;
@@ -278,10 +274,11 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Partner:
                 {
-                    SpritesU::drawPlusMaskFX(6, 16, Images::Bid_Left, (2 * 3) + currentPlane); 
+                    SpritesU::drawPlusMaskFX(6, 16, Images::Bid_Left, (1 * 3) + currentPlane); 
 
                     if (dealer == 2) {
-                        bidder_X = 8;
+                        bidder_X = 7;
+                        bidder_Y = 7;                       
                     }
 
                 }
@@ -289,10 +286,11 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Alone:
                 {
-                    SpritesU::drawPlusMaskFX(6, 16, Images::Bid_Left, (1 * 3) + currentPlane); 
+                    SpritesU::drawPlusMaskFX(6, 16, Images::Bid_Left, (2 * 3) + currentPlane); 
 
                     if (dealer == 2) {
-                        bidder_X = 8;
+                        bidder_X = 7;
+                        bidder_Y = 7;                       
                     }
 
                 }
@@ -303,7 +301,7 @@ void renderBids(uint8_t currentPlane) {
                 SpritesU::drawPlusMaskFX(6, 16, Images::Bid_Left, (0 * 3) + currentPlane); 
 
                 if (dealer == 2) {
-                    bidder_X = 8;
+                    bidder_X = 7;
                     bidder_Y = 11;                       
                 }
 
@@ -312,7 +310,7 @@ void renderBids(uint8_t currentPlane) {
             case BidType::None:
 
                 if (dealer == 2) {
-                    bidder_X = 8;
+                    bidder_X = 7;
                     bidder_Y = 23;                       
                 }
 
@@ -570,8 +568,6 @@ void renderHUD(uint8_t currentPlane, bool displayCard, bool displayWinningBid) {
                 break;
 
         }
-
-        // SpritesU::drawOverwriteFX(107, 29, Images::Bid_Result_Narrow, (gameRound.getHighestBid().getImageIndex() * 3) + currentPlane);
         
         if (gameRound.getWinningBid_Idx() != Constants::WinningBid_None) {
 

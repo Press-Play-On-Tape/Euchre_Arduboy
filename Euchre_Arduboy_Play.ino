@@ -129,16 +129,14 @@ void play_Init() {
     gameRound.setScore(1, 0);
 
     // #ifdef DEBUG_RAND
+    a.initRandomSeed();
     uint16_t r = random(8000);
-    // DEBUG_PRINT("Rand ");
-    // DEBUG_PRINTLN(r);
-    Serial.print("Rand: ");
-    Serial.println(r);
-    r=2559;
+    DEBUG_PRINT("Rand ");
+    DEBUG_PRINTLN(r);
+    // r=4345;
     randomSeed(r);
     game.setRandomSeed(r);
     // #endif
-    randomSeed(14);
 
 }
 
@@ -150,7 +148,6 @@ void populateRotateDetails(uint8_t card) {
     dealPhysics.x2 = pgm_read_byte(Constants::DealCardCoords + (card * 2)) * 16;
     dealPhysics.y2 = pgm_read_byte(Constants::DealCardCoords + (card * 2) + 1) * 16;
     dealPhysics.rotInc = 27 * 16;
-
 
     dealPhysics.xInc = (dealPhysics.x2 - dealPhysics.x) / dealPhysics.noOfIncs;
     dealPhysics.yInc = (dealPhysics.y2 - dealPhysics.y) / dealPhysics.noOfIncs;
@@ -196,8 +193,8 @@ void play_Update() {
 
             gameRound.setDealer_Idx(gameRound.getDealer_Idx() + 1); 
             playerCurrentlyBidding = (gameRound.getDealer_Idx() + 1) % 4;
-            // gameRound.setDealer_Idx(2); //SJH
-            // playerCurrentlyBidding = (2 + 1) % 4;
+            // gameRound.setDealer_Idx(0); //SJH
+            // playerCurrentlyBidding = (0 + 1) % 4;
 
             if (gameRound.getDealer_Idx() == 0) {
                 populateRotateDetails(0);
@@ -244,7 +241,6 @@ void play_Update() {
                                 gameState++;
                                 game.setFrameCount(0);
                                
-
                                 if (card < getCardIdx(1, round, 2) + 1) {
                                     populateRotateDetails(game.players[1].getCardCount());
                                 }
@@ -283,6 +279,14 @@ void play_Update() {
 
                 }
 
+                if (gameState == GameState::Play_Deal_08) {
+                
+                    if (gameRound.getDealer_Idx() == 0) {
+                        populateRotateDetails(0);
+                    }
+                    
+                }
+
                 break;
       
             case GameState::Play_Deal_08 ... GameState::Play_Deal_19:
@@ -309,11 +313,12 @@ void play_Update() {
                             if (dealPhysics.x <= dealPhysics.x2 || dealPhysics.y >= dealPhysics.y2) {
 
                                 dealCard(player);
+
                                 game.players[1].sort();
                                 gameState++;
                                 game.setFrameCount(0);
 
-                                if (card < getCardIdx(1, 8, 3) + 3) {
+                                if (card < getCardIdx(1, 8, 3) + 2) {
                                     populateRotateDetails(game.players[1].getCardCount());
                                 }
 
@@ -365,7 +370,6 @@ void play_Update() {
 
         case GameState::Play_Deal_Catchup:
 
-
             for (uint8_t player = 0; player < 4; player++) {
 
                 while (game.players[player].getCardCount() < 5) {
@@ -385,6 +389,8 @@ void play_Update() {
             for (uint8_t i = 0; i < 4; i++) {
                 game.players[i].sort();
             }
+
+            populateRotateDetails(0);
 
             // game.players[0].getCard(0).setSuit(Suit::Spades);           game.players[0].getCard(0).setRank(Rank::Ten);
             // game.players[0].getCard(1).setSuit(Suit::Spades);           game.players[0].getCard(1).setRank(Rank::Jack);
@@ -415,33 +421,33 @@ void play_Update() {
             // gameRound.getKitty()->setOrigSuit(Suit::Clubs);
             // gameRound.getKitty()->setOrigRank(Rank::King);
 
-            // game.players[0].getCard(0).setSuit(Suit::Diamonds);         game.players[0].getCard(0).setRank(Rank::Queen);
-            // game.players[0].getCard(1).setSuit(Suit::Clubs);            game.players[0].getCard(1).setRank(Rank::King);
-            // game.players[0].getCard(2).setSuit(Suit::Hearts);           game.players[0].getCard(2).setRank(Rank::King);
-            // game.players[0].getCard(3).setSuit(Suit::Clubs);            game.players[0].getCard(3).setRank(Rank::Nine);
-            // game.players[0].getCard(4).setSuit(Suit::Diamonds);         game.players[0].getCard(4).setRank(Rank::Nine);
+            // game.players[0].getCard(0).setSuit(Suit::Spades);           game.players[0].getCard(0).setRank(Rank::Ace);
+            // game.players[0].getCard(1).setSuit(Suit::Hearts);           game.players[0].getCard(1).setRank(Rank::Queen);
+            // game.players[0].getCard(2).setSuit(Suit::Hearts);           game.players[0].getCard(2).setRank(Rank::Ace);
+            // game.players[0].getCard(3).setSuit(Suit::Hearts);           game.players[0].getCard(3).setRank(Rank::Jack);
+            // game.players[0].getCard(4).setSuit(Suit::Clubs);            game.players[0].getCard(4).setRank(Rank::Jack);
 
-            // game.players[1].getCard(0).setSuit(Suit::Spades);           game.players[1].getCard(0).setRank(Rank::Nine);
-            // game.players[1].getCard(1).setSuit(Suit::Diamonds);         game.players[1].getCard(1).setRank(Rank::Ten);
-            // game.players[1].getCard(2).setSuit(Suit::Hearts);           game.players[1].getCard(2).setRank(Rank::Nine);
-            // game.players[1].getCard(3).setSuit(Suit::Hearts);           game.players[1].getCard(3).setRank(Rank::Jack);
-            // game.players[1].getCard(4).setSuit(Suit::Hearts);           game.players[1].getCard(4).setRank(Rank::Queen);
+            // game.players[1].getCard(0).setSuit(Suit::Spades);           game.players[1].getCard(0).setRank(Rank::Queen);
+            // game.players[1].getCard(1).setSuit(Suit::Diamonds);         game.players[1].getCard(1).setRank(Rank::Queen);
+            // game.players[1].getCard(2).setSuit(Suit::Clubs);            game.players[1].getCard(2).setRank(Rank::Nine);
+            // game.players[1].getCard(3).setSuit(Suit::Clubs);            game.players[1].getCard(3).setRank(Rank::Queen);
+            // game.players[1].getCard(4).setSuit(Suit::Clubs);            game.players[1].getCard(4).setRank(Rank::King);
 
-            // game.players[2].getCard(0).setSuit(Suit::Spades);           game.players[2].getCard(0).setRank(Rank::Jack);
-            // game.players[2].getCard(1).setSuit(Suit::Diamonds);         game.players[2].getCard(1).setRank(Rank::Ace);
-            // game.players[2].getCard(2).setSuit(Suit::Clubs);            game.players[2].getCard(2).setRank(Rank::Ace);
-            // game.players[2].getCard(3).setSuit(Suit::Hearts);           game.players[2].getCard(3).setRank(Rank::Ten);
-            // game.players[2].getCard(4).setSuit(Suit::Clubs);            game.players[2].getCard(4).setRank(Rank::Queen);
+            // game.players[2].getCard(0).setSuit(Suit::Spades);           game.players[2].getCard(0).setRank(Rank::Nine);
+            // game.players[2].getCard(1).setSuit(Suit::Spades);           game.players[2].getCard(1).setRank(Rank::Ten);
+            // game.players[2].getCard(2).setSuit(Suit::Spades);           game.players[2].getCard(2).setRank(Rank::King);
+            // game.players[2].getCard(3).setSuit(Suit::Hearts);           game.players[2].getCard(3).setRank(Rank::King);
+            // game.players[2].getCard(4).setSuit(Suit::Diamonds);         game.players[2].getCard(4).setRank(Rank::Jack);
 
-            // game.players[3].getCard(0).setSuit(Suit::Diamonds);         game.players[3].getCard(0).setRank(Rank::Jack);
-            // game.players[3].getCard(1).setSuit(Suit::Spades);           game.players[3].getCard(1).setRank(Rank::King);
+            // game.players[3].getCard(0).setSuit(Suit::Diamonds);         game.players[3].getCard(0).setRank(Rank::Nine);
+            // game.players[3].getCard(1).setSuit(Suit::Diamonds);         game.players[3].getCard(1).setRank(Rank::Ten);
             // game.players[3].getCard(2).setSuit(Suit::Diamonds);         game.players[3].getCard(2).setRank(Rank::King);
-            // game.players[3].getCard(3).setSuit(Suit::Spades);           game.players[3].getCard(3).setRank(Rank::Ace);
-            // game.players[3].getCard(4).setSuit(Suit::Spades);           game.players[3].getCard(4).setRank(Rank::Ten);
+            // game.players[3].getCard(3).setSuit(Suit::Hearts);           game.players[3].getCard(3).setRank(Rank::Nine);
+            // game.players[3].getCard(4).setSuit(Suit::Hearts);           game.players[3].getCard(4).setRank(Rank::Ten);
 
-            // gameRound.getKitty()->setSuit(Suit::Hearts);
+            // gameRound.getKitty()->setSuit(Suit::Clubs);
             // gameRound.getKitty()->setRank(Rank::Ace);
-            // gameRound.getKitty()->setOrigSuit(Suit::Hearts);
+            // gameRound.getKitty()->setOrigSuit(Suit::Clubs);
             // gameRound.getKitty()->setOrigRank(Rank::Ace);
             break;
 
@@ -457,7 +463,7 @@ void play_Update() {
                    
                         bid = game.players[playerCurrentlyBidding].bid(gameRound.getKitty()->getSuit(), *gameRound.getKitty(), playerCurrentlyBidding == dealer);
                              
-                        if (bid >= 180) { 
+                        if (bid >= 200) { 
 
                             #ifdef DEBUG
                             DEBUG_PRINTLN("Go Alone");
@@ -503,11 +509,11 @@ void play_Update() {
                
                         switch (retBid) {
                                             
-                            case 180 ... 999:
+                            case 200 ... 999:
                                 bidInput.setMode(BidMode::Alone);
                                 break;
                                             
-                            case 150 ... 179:
+                            case 150 ... 199:
                                 bidInput.setMode(BidMode::Bid);
                                 break;
                                             
@@ -577,7 +583,7 @@ void play_Update() {
 
                         }
 
-                        if (bid >= 180) {
+                        if (bid >= 200) {
 
                             #ifdef DEBUG
                             DEBUG_PRINTLN("Go Alone");
@@ -611,34 +617,45 @@ void play_Update() {
                 }
                 else {
 
-                    // if (playerAssist) {
-                        
-                    //     Bid &highestBid = gameRound.getHighestBid();
-                    //     Bid &previousBid = gameRound.getBid(playerCurrentlyBidding);
-                    //     Bid &partnerBid = gameRound.getBid((playerCurrentlyBidding + 2) % 4);
+                    if (playerAssist) {
 
-                    //     Bid retBid = game.players[playerCurrentlyBidding].bid(previousBid, partnerBid, highestBid);
-                    //     previousBid.setBid(retBid);
-                
-                    //     switch (retBid.getBidType()) {
-                                            
-                    //         case BidType::Pass:
-                    //             bidInput.setMode(BidMode::Pass);
-                    //             break;
-                                            
-                    //         case BidType::Misere:
-                    //             bidInput.setMode(BidMode::Misere);
-                    //             break;
-                                            
-                    //         case BidType::Partner:
-                    //             bidInput.setLevel(retBid.getLevel() - 6);
-                    //             bidInput.setSuit(static_cast<uint8_t>(retBid.getSuit()));
-                    //             bidInput.setMode(BidMode::Bid);
-                    //             break;
+                        for (uint8_t s = 0; s < 4; s++) {
 
-                    //     }
+                            Card noCard;
+                            noCard.setSuit(static_cast<Suit>(s));
+                            noCard.setRank(Rank::None);
+                            scores[s] = game.players[Constants::HumanPlayer].bid(static_cast<Suit>(s), noCard, false);
 
-                    // }
+                        }
+
+                        for (uint8_t s = 0; s < 4; s++) {
+
+                            if (scores[s] > bid) {
+                                bid = scores[s];
+                                bidSuit = static_cast<Suit>(s);
+                            }
+
+                        }
+               
+                        switch (bid) {
+                                            
+                            case 200 ... 999:
+                                bidInput.setSuit(bidSuit);
+                                bidInput.setMode(BidMode::Alone);
+                                break;
+                                            
+                            case 150 ... 199:
+                                bidInput.setSuit(bidSuit);
+                                bidInput.setMode(BidMode::Bid);
+                                break;
+                                            
+                            default:
+                                bidInput.setMode(BidMode::Pass);
+                                break;
+
+                        }
+
+                    }
 
                     gameState++;
 
@@ -780,62 +797,75 @@ void play_Update() {
 
                 if (dealer == Constants::HumanPlayer) {
 
-                    if (justPressed > 0) {
-                    
-                        if (kittyHighlight > 0) {
-                            kittyHighlight = 0;
-                            game.players[Constants::HumanPlayer].clearSelection();
-                        }
-
-                    }
-
-                    if (justPressed == LEFT_BUTTON && selectedCard > 0) {
-
-                        selectedCard--;
-
-                    }
-
-                    if (justPressed == RIGHT_BUTTON && selectedCard < game.players[Constants::HumanPlayer].getCardCount() - 1) {
-
-                        selectedCard++;
-
-                    }
-
-                    if (justPressed == UP_BUTTON) {
-
-                        game.players[Constants::HumanPlayer].clearSelection();
-                        game.players[Constants::HumanPlayer].getCard(selectedCard).setSelected(true);
-                    
-                    }
-
-                    if (justPressed == DOWN_BUTTON && game.players[Constants::HumanPlayer].getCard(selectedCard).isSelected()) {
-
-                        game.players[Constants::HumanPlayer].getCard(selectedCard).setSelected(false);
-                    
-                    }
-
-                    if (justPressed == A_BUTTON && game.players[Constants::HumanPlayer].getSelectedCount() == 1) {
+                    if (gameRound.getWinningBid_Idx() == Constants::HumanPlayer_Partner && gameRound.getHighestBid().getBidType() == BidType::Alone) {
 
                         gameRound.setRound(0);
                         gameRound.clearKitty();
 
-                        uint8_t kittyIndex = 0;
+                        if (!playerAssist) highlightSuitInHand();
+                        gameState++;
 
-                        for (uint8_t i = 0; i < game.players[Constants::HumanPlayer].getCardCount(); i++) {
-
-                            if (game.players[Constants::HumanPlayer].getCard(i).isSelected()) {
-
-                                game.players[Constants::HumanPlayer].getCard(i).reset();
-                                game.players[Constants::HumanPlayer].sort();
-                                game.players[Constants::HumanPlayer].setCardCount(5);
-                                kittyIndex++;
-
+                    }
+                    else {
+                        
+                        if (justPressed > 0) {
+                        
+                            if (kittyHighlight > 0) {
+                                kittyHighlight = 0;
+                                game.players[Constants::HumanPlayer].clearSelection();
                             }
 
                         }
 
-                        if (!playerAssist) highlightSuitInHand();
-                        gameState++;
+                        if (justPressed == LEFT_BUTTON && selectedCard > 0) {
+
+                            selectedCard--;
+
+                        }
+
+                        if (justPressed == RIGHT_BUTTON && selectedCard < game.players[Constants::HumanPlayer].getCardCount() - 1) {
+
+                            selectedCard++;
+
+                        }
+
+                        if (justPressed == UP_BUTTON) {
+
+                            game.players[Constants::HumanPlayer].clearSelection();
+                            game.players[Constants::HumanPlayer].getCard(selectedCard).setSelected(true);
+                        
+                        }
+
+                        if (justPressed == DOWN_BUTTON && game.players[Constants::HumanPlayer].getCard(selectedCard).isSelected()) {
+
+                            game.players[Constants::HumanPlayer].getCard(selectedCard).setSelected(false);
+                        
+                        }
+
+                        if (justPressed == A_BUTTON && game.players[Constants::HumanPlayer].getSelectedCount() == 1) {
+
+                            gameRound.setRound(0);
+                            gameRound.clearKitty();
+
+                            uint8_t kittyIndex = 0;
+
+                            for (uint8_t i = 0; i < game.players[Constants::HumanPlayer].getCardCount(); i++) {
+
+                                if (game.players[Constants::HumanPlayer].getCard(i).isSelected()) {
+
+                                    game.players[Constants::HumanPlayer].getCard(i).reset();
+                                    game.players[Constants::HumanPlayer].sort();
+                                    game.players[Constants::HumanPlayer].setCardCount(5);
+                                    kittyIndex++;
+
+                                }
+
+                            }
+
+                            if (!playerAssist) highlightSuitInHand();
+                            gameState++;
+
+                        }
 
                     }
 
@@ -852,6 +882,15 @@ void play_Update() {
 
                 }
                 else {
+
+                    if (gameRound.getHighestBid().getBidType() == BidType::Alone && (gameRound.getWinningBid_Idx() + 2) % 4 == dealer) {
+
+                        gameRound.setRound(0);
+                        gameRound.clearKitty();
+                        if (!playerAssist) highlightSuitInHand();
+                        gameState++;
+
+                    }
 
                     if (game.getFrameCount() % 64 == 0) {
 
@@ -1036,8 +1075,8 @@ void play_Update() {
 
                 uint8_t biddingTeam = gameRound.getWinningBid_Team();
                 uint8_t winningTeam = gameRound.getTeam_TrickCount(0) > 0 ? 0 : 1;
-                int16_t winningScore_BidTeam = gameRound.getWinningScore_BidTeam(gameRound.getTeam_TrickCount(biddingTeam));
-                uint8_t winningScore_Alt = gameRound.getWinningScore_AltTeam(gameRound.getTeam_TrickCount(biddingTeam));
+                uint8_t winningScore_BidTeam = gameRound.getWinningScore_BidTeam(gameRound.getTeam_TrickCount(biddingTeam));
+                uint8_t winningScore_Alt = (winningScore_BidTeam > 0 ? 0 : gameRound.getWinningScore_AltTeam(gameRound.getTeam_TrickCount(biddingTeam)));
 
                 #ifdef DEBUG_BASIC
                     DEBUG_PRINT(F("Winning Bid team "));
@@ -1071,8 +1110,8 @@ void play_Update() {
 
         case GameState::Play_EndOfRound:
 
-            if ((gameRound.getScore(0) <= -500 || gameRound.getScore(0) >= 500) ||
-                (gameRound.getScore(1) <= -500 || gameRound.getScore(1) >= 500)) {  
+            if ((gameRound.getScore(0) >= 3) ||
+                (gameRound.getScore(1) >= 3)) {  
 
                 gameState = GameState::Play_EndOfGame;
                 endOfGame_Y = 0;
@@ -1125,7 +1164,16 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
             renderHUD(currentPlane, true, false);
 
             if (dealPhysics.x > dealPhysics.x2 && dealPhysics.y < dealPhysics.y2) {
-                SpritesU::drawPlusMaskFX((dealPhysics.x / 16)  - 5, (dealPhysics.y / 16) - 4, Images::Rotate, ((static_cast<uint8_t>((dealPhysics.rot / 16)) % 36) * 3) + currentPlane);
+
+                uint8_t card = static_cast<uint8_t>(gameState) - static_cast<uint8_t>(GameState::Play_Deal_00);
+
+                if ((card >= getCardIdx(1, 0, 2) && card <= getCardIdx(1, 0, 2) + 1) ||
+                    (card >= getCardIdx(1, 8, 3) && card <= getCardIdx(1, 8, 3) + 2)) {
+
+                    SpritesU::drawPlusMaskFX((dealPhysics.x / 16)  - 5, (dealPhysics.y / 16) - 4, Images::Rotate, ((static_cast<uint8_t>((dealPhysics.rot / 16)) % 36) * 3) + currentPlane);
+
+                }
+
             }
 
             break;
@@ -1139,7 +1187,7 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
             if (playerCurrentlyBidding == Constants::HumanPlayer) {
 
-                SpritesU::drawPlusMaskFX(45, 17, Images::Bid_Round1, (static_cast<uint8_t>(bidInput.getMode()) * 3) + currentPlane - 3);
+                SpritesU::drawPlusMaskFX(45, 15, Images::Bid_Round1, (static_cast<uint8_t>(bidInput.getMode()) * 3) + currentPlane - 3);
             
             }
            
@@ -1153,11 +1201,11 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
             renderPlayerHands(currentPlane, false, false);
             renderHUD(currentPlane, false, false);
 
-            if (playerCurrentlyBidding == Constants::HumanPlayer) {
+            // if (playerCurrentlyBidding == Constants::HumanPlayer) {
 
-                SpritesU::drawPlusMaskFX(45, 17, Images::Bid_Round1, (static_cast<uint8_t>(bidInput.getMode()) * 3) + currentPlane - 3);
+            //     SpritesU::drawPlusMaskFX(45, 15, Images::Bid_Round1, (static_cast<uint8_t>(bidInput.getMode()) * 3) + currentPlane - 3);
             
-            }
+            // }
            
             renderBids(currentPlane);
 
@@ -1172,13 +1220,13 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
             if (playerCurrentlyBidding == Constants::HumanPlayer) {
 
-                SpritesU::drawPlusMaskFX(29, 17, Images::Bid_Round2, (static_cast<uint8_t>(bidInput.getMode()) * 3) + currentPlane);
+                SpritesU::drawPlusMaskFX(29, 15, Images::Bid_Round2, (static_cast<uint8_t>(bidInput.getMode()) * 3) + currentPlane);
 
                 if (bidInput.getMode() == BidMode::SuitSelect) {
-                    SpritesU::drawOverwriteFX(34, 25, Images::Bid_Suits, (static_cast<uint8_t>(bidInput.getSuit()) * 3) + currentPlane);
+                    SpritesU::drawOverwriteFX(34, 23, Images::Bid_Suits, (static_cast<uint8_t>(bidInput.getSuit()) * 3) + currentPlane);
                 }
                 else {
-                    SpritesU::drawOverwriteFX(34, 25, Images::Bid_Suits, ((static_cast<uint8_t>(bidInput.getSuit()) + 4) * 3) + currentPlane);
+                    SpritesU::drawOverwriteFX(34, 23, Images::Bid_Suits, ((static_cast<uint8_t>(bidInput.getSuit()) + 4) * 3) + currentPlane);
                 }
             
             }
@@ -1199,12 +1247,19 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
         case GameState::Handle_Kitty:
 
             if (gameRound.getDealer_Idx() == Constants::HumanPlayer) {
-                SpritesU::drawOverwriteFX(21, 15, Images::KittyInstructions, currentPlane);
+                
+                if (gameRound.getWinningBid_Idx() != Constants::HumanPlayer_Partner || gameRound.getHighestBid().getBidType() != BidType::Alone) {
+                    SpritesU::drawOverwriteFX(21, 15, Images::KittyInstructions, currentPlane);
+                }
+
                 renderPlayerHands(currentPlane, true, false);
+
             }
             else {
+
                 renderDealer(currentPlane);
                 renderPlayerHands(currentPlane, false, false);
+
             }
 
             renderHUD(currentPlane, false, true);
@@ -1222,7 +1277,6 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
             if (gameRound.getRound() == 0) {
                 renderBids(currentPlane);
             }
-            // renderDiscard(currentPlane);
 
             break;
 

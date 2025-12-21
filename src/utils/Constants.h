@@ -31,12 +31,8 @@
 //Play
 
 #define _DEBUG_PLAYER_WINNING_HAND
-#define _DEBUG_PLAYNOTRUMPS_LEAD
-#define _DEBUG_PLAYNOTRUMPS_FOLLOW
 #define _DEBUG_PLAYSUIT_LEAD;
 #define _DEBUG_PLAYSUIT_FOLLOW;
-#define _DEBUG_PLAYMISERE_LEAD
-#define _DEBUG_PLAYMISERE_FOLLOW
 #define _DEBUG_MARKCARDPLAYED
 #define _DEBUG_HASCARDBEENPLAYED
 #define _DEBUG_GETTOP_INSUIT
@@ -75,6 +71,7 @@ namespace Constants {
     constexpr uint8_t PlayerCount = 4;
     constexpr uint8_t CardsInDeck = 52;
     constexpr uint8_t HumanPlayer = 1;
+    constexpr uint8_t HumanPlayer_Partner = 3;
     constexpr uint8_t HumanTeam = 1;
     constexpr uint8_t BotTeam = 0;
 

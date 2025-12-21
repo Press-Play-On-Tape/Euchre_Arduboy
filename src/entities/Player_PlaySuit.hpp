@@ -264,17 +264,14 @@ void playSuit_Follow(bool isHuman) {
                     uint8_t winningCardIdx = this->gameRound->getWinningHand();
                     Card *winningCard = this->gameRound->getHand(winningCardIdx);
 
-
                     if (this->playNextHighest_LargerThan_InSuit(cardLedSuit, winningCard->getRank(), isHuman))     return; // Over trump ..
-                    // if (this->playHighest_InSuit(cardLedSuit, isHuman))                                            return; // Win hand  ..
+                    else if (this->playLowest_InSuit(cardLedSuit, isHuman))                                        return; // Follow suit with smallest ..
                     else if (this->playLowest_InSuit(trumps, isHuman))                                             return; // Trump the hand with a small one ..
                     else if (this->playLowest_AllSuit(trumps, isHuman))                                            return; // Throw rubbish ..
 
                 }
 
             }
-
-            // this->playJoker(trumps, isHuman);                                                                      return;
 
         }
 
@@ -379,8 +376,7 @@ void playSuit_Follow_Alone(bool isHuman) {
             #if defined(DEBUG) && defined(DEBUG_PLAYSUIT_FOLLOW)
                 DEBUG_PRINTLN(F("22. Hand has been trumped."));
             #endif
-// Serial.print("larget trump ");
-// DEBUG_PRINT_CARD(largestTrump.getSuit(),largestTrump.getRank());
+
             if (this->playNextHighest_LargerThan_InSuit(trumps, largestTrump.getRank(), isHuman))              return; // Win hand with lowest possible trump ..
             else if (this->playLowest_InSuit(cardLedSuit, isHuman))                                            return; // Follow suit ..
             else if (this->playLowest_AllSuit(trumps, isHuman))                                                return; // Throw rubbish ..

@@ -145,13 +145,11 @@ convert_header(IMAGES + 'Bid/Bid_Top_Discard.png',                              
 convert_header(IMAGES + 'Bid/Bid_Bottom_Discard.png',                                          BASE + 'Images.hpp', 'Bid_Bottom_Discard', 4, 27, 8)
 convert_header(IMAGES + 'Bid/Bid_Left_Discard.png',                                            BASE + 'Images.hpp', 'Bid_Left_Discard', 4, 7, 32)
 convert_header(IMAGES + 'Bid/Bid_Right_Discard.png',                                           BASE + 'Images.hpp', 'Bid_Right_Discard', 4, 7, 32)
-convert_header(IMAGES + 'Bid/Bid_Result.png',                                                  BASE + 'Images.hpp', 'Bid_Result', 4, 40, 8)
 convert_header(IMAGES + 'Titles/TitleEuchre.png',                                              BASE + 'Images.hpp', 'TitleEuchre', 4, 128, 64)
 convert_header(IMAGES + 'Titles/TitleEuchre_Assist.png',                                       BASE + 'Images.hpp', 'TitleEuchre_Assist', 4)
 convert_header(IMAGES + 'Dealer.png',                                                          BASE + 'Images.hpp', 'Dealer', 4)
 convert_header(IMAGES + 'EveryonePassed.png',                                                  BASE + 'Images.hpp', 'EveryonePassed', 4)
 convert_header(IMAGES + 'KittyInstructions.png',                                               BASE + 'Images.hpp', 'KittyInstructions', 4)
-convert_header(IMAGES + 'ChooseSuit.png',                                                      BASE + 'Images.hpp', 'ChooseSuit', 4, 49, 24)
 
 convert_header(IMAGES + 'Titles/PPOT.png',                                                     BASE + 'Images.hpp', 'PPOT', 4, 128, 64)
 convert_header(IMAGES + 'Titles/You_Won.png',                                                  BASE + 'Images.hpp', 'You_Won', 4, 75, 48)

@@ -76,6 +76,7 @@ void setup() {
 
     game.setFrameCount(0);
     Serial.begin(9600);
+    a.initRandomSeed();
 
 }
 

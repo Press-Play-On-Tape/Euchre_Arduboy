@@ -19,13 +19,13 @@ void handleKitty() {
 
     Suit startingSuit = this->gameRound->getBid((this->getPlayerNumber() - 1 + 4) % 4).getSuit();
 
-    // if (startingSuit == Suit::None) {
-    //     startingSuit = this->gameRound->getBid((this->getPlayerNumber() + 1) % 4).getSuit();
-    // }
+    if (startingSuit == Suit::None) {
+        startingSuit = this->gameRound->getBid((this->getPlayerNumber() + 1) % 4).getSuit();
+    }
 
-    // if (startingSuit == Suit::None) {
-    //     startingSuit = Suit::Spades;
-    // }    
+    if (startingSuit == Suit::None) {
+        startingSuit = Suit::Spades;
+    }    
 
 
     #if defined(DEBUG) && defined(DEBUG_HANDLEKITTY)
@@ -89,10 +89,10 @@ void handleKitty() {
 
     if (numberDiscarded < 1) {
         
-        for (uint8_t i = 1; i < 10; i++) {
+        for (uint8_t i = 1; i < 6; i++) {
                                 
-            for (Rank rank = Rank::Nine; rank < Rank::TopCard; rank++) {
-                
+            for (Rank rank = Rank::Nine; rank < Rank::Joker; rank++) {
+
                 for (uint8_t s = static_cast<uint8_t>(startingSuit); s < static_cast<uint8_t>(startingSuit) + 4; s++) {
 
                     Suit suit = static_cast<Suit>(s % 4);
@@ -103,37 +103,42 @@ void handleKitty() {
                     if (numberDiscarded == 1) break;
 
                     uint8_t countOfSuit = this->getNumberOfCards_InSuit(suit);
-                    uint8_t idx = this->getLowest_InSuit(suit);
 
-                    if (idx != Constants::No_Card) {
+                    if (countOfSuit == i) {
+                        
+                        uint8_t idx = this->getLowest_InSuit(suit);
 
-                        Card &lowestCard = this->cards[idx];
+                        if (idx != Constants::No_Card) {
 
-                        if (countOfSuit == i && lowestCard.getRank() == rank) {
+                            Card &lowestCard = this->cards[idx];
 
-                            if (static_cast<uint8_t>(lowestCard.getRank()) + countOfSuit == 15) {
+                            if (lowestCard.getRank() == rank) {
 
-                                #if defined(DEBUG) && defined(DEBUG_HANDLEKITTY)
-                                    DEBUG_PRINT(F("\n- "));
-                                    DEBUG_PRINT_CARD(lowestCard.getSuit(), lowestCard.getRank());
-                                    DEBUG_PRINT(F(" skipped."));
-                                #endif
-                            
-                            }
-                            else {
+                                if (static_cast<uint8_t>(lowestCard.getRank()) + countOfSuit == 15) {
 
-                                #if defined(DEBUG) && defined(DEBUG_HANDLEKITTY)
-                                    DEBUG_PRINT(F("\n- "));
-                                    DEBUG_PRINT_CARD(lowestCard.getSuit(), lowestCard.getRank());
-                                    DEBUG_PRINT_SPACE();
-                                #endif
+                                    #if defined(DEBUG) && defined(DEBUG_HANDLEKITTY)
+                                        DEBUG_PRINT(F("\n- "));
+                                        DEBUG_PRINT_CARD(lowestCard.getSuit(), lowestCard.getRank());
+                                        DEBUG_PRINT(F(" skipped."));
+                                    #endif
+                                
+                                }
+                                else {
 
-                                this->discardCard(lowestCard);
-                                numberDiscarded = numberDiscarded + 1;
+                                    #if defined(DEBUG) && defined(DEBUG_HANDLEKITTY)
+                                        DEBUG_PRINT(F("\n- "));
+                                        DEBUG_PRINT_CARD(lowestCard.getSuit(), lowestCard.getRank());
+                                        DEBUG_PRINT_SPACE();
+                                    #endif
 
-                            }
+                                    this->discardCard(lowestCard);
+                                    numberDiscarded = numberDiscarded + 1;
 
-                        }            
+                                }
+
+                            }            
+
+                        }
 
                     }
 

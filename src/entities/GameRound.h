@@ -18,18 +18,13 @@ struct GameRound {
         uint8_t tricksWon[Constants::Player_Count];
         int16_t score[Constants::Team_Count];
         uint16_t playedCards[Constants::Suit_Count];
-        TriState hasSuitInHand[Constants::Player_Count][Constants::Suit_Count];  // [player][suit];
-
-        // Suit jokerSuit = Suit::None;
+        TriState hasSuitInHand[Constants::Player_Count][Constants::Suit_Count];  
 
         uint8_t round = 0;
         uint8_t firstPlayer = 0;
         uint8_t currentPlayer = 0;
-        // uint8_t handCount = 10;
         uint8_t dealerIdx = 0;
         uint8_t winningBidIdx = Constants::WinningBid_None;   // Index to bid array ..
-
-        // bool playedJoker = false;
 
     public:
 
@@ -41,22 +36,16 @@ struct GameRound {
         uint8_t getRound()                                          { return this->round; }
         uint8_t getFirstPlayer_Idx()                                { return this->firstPlayer; }
         uint8_t getCurrentPlayer_Idx()                              { return this->currentPlayer; }
-        // uint8_t getHandCount()                                      { return this->handCount; }
         uint8_t getWinningBid_Idx()                                 { return this->winningBidIdx; }
         uint8_t getDealer_Idx()                                     { return this->dealerIdx; }
-        // bool getPlayedJoker()                                       { return this->playedJoker; }
 
-        // void setJokerSuit(Suit val)                                 { this->jokerSuit = val; }
         void setKitty(Card &kitty)                                  { this->kitty.setSuit(kitty.getSuit()); this->kitty.setRank(kitty.getRank()); }
         void setScore(uint8_t teamIdx, int16_t val)                 { this->score[teamIdx] = val; }
         void setRound(uint8_t val)                                  { this->round = val; }
         void setFirstPlayer_Idx(uint8_t val)                        { this->firstPlayer = val; }
         void setCurrentPlayer_Idx(uint8_t val)                      { this->currentPlayer = val; }
-        // void setHandCount(uint8_t val)                              { this->handCount = val; }
         void setWinningBid_Idx(uint8_t val)                         { this->winningBidIdx = val; }
         void setDealer_Idx(uint8_t val)                             { this->dealerIdx = val % 4; }
-        // void setPlayedJoker(bool val)                               { this->playedJoker = val; }
-
 
         uint8_t getTableCardCount() {
 
@@ -118,34 +107,6 @@ struct GameRound {
             return this->bid[this->winningBidIdx];
 
         }
-
-
-        // uint8_t getWinningTeam() {
-        
-        //     Bid bid = this->getWinningBid();
-
-        //     switch (bid.getBidType()) {
-            
-        //         case BidType::Partner:
-
-        //             switch (getWinningBid_Team()) {
-                    
-        //                 case 0:
-        //                     return 0;// (this->tricksWon[0] + this->tricksWon[2] >= bid.getLevel()) ? 0 : 1;
-
-        //                 case 1:
-        //                     return 1;// (this->tricksWon[1] + this->tricksWon[3] >= bid.getLevel()) ? 1 : 0;
-
-        //             }
-
-        //             break;
-
-        //     }
-
-        //     return 0;
-
-        // }
-
 
         uint8_t getTeam_TrickCount(uint8_t teamIdx) {
         

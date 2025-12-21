@@ -55,6 +55,9 @@ struct Card {
             this->suit = suit;
             this->rank = rank;
 
+            this->origSuit = this->suit;
+            this->origRank = this->rank;
+
         }
 
         void setTrumps(Suit trumps) {
