@@ -2,10 +2,10 @@
   "schemaVersion": 3,
   "binaries": [
     {
-      "title": "Australian 500",
-      "filename": "Aus500.hex",
-      "flashdata": "Aus500-data.bin",
-      "flashsave": "Aus500-save.bin",
+      "title": "Euchre",
+      "filename": "Euchre_Arduboy_Mini.hex",
+      "flashdata": "Euchre_Arduboy_Mini-data.bin",
+      "flashsave": "Euchre_Arduboy_Mini-save.bin",
       "device": "ArduboyMini"
     }
   ]
