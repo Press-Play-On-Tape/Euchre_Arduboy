@@ -220,7 +220,7 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Partner:
                 {
-                    SpritesU::drawPlusMaskFX(41, 40, Images::Bid_Bottom, (27 * 3) + currentPlane); 
+                    SpritesU::drawPlusMaskFX(41, 40, Images::Bid_Bottom, (1 * 3) + currentPlane); 
 
                     if (dealer == Constants::HumanPlayer) {
                         bidder_Y = 40;                       
@@ -232,7 +232,7 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Alone:
                 {
-                    SpritesU::drawPlusMaskFX(41, 40, Images::Bid_Bottom, (28 * 3) + currentPlane); 
+                    SpritesU::drawPlusMaskFX(41, 40, Images::Bid_Bottom, (2 * 3) + currentPlane); 
 
                     if (dealer == Constants::HumanPlayer) {
                         bidder_Y = 40;                       
@@ -243,7 +243,7 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Pass:
 
-                SpritesU::drawPlusMaskFX(41, 40, Images::Bid_Bottom, (26 * 3) + currentPlane); 
+                SpritesU::drawPlusMaskFX(41, 40, Images::Bid_Bottom, (0 * 3) + currentPlane); 
 
                 if (dealer == Constants::HumanPlayer) {
                     bidder_X = 35;
@@ -328,7 +328,7 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Partner:
                 {
-                    SpritesU::drawPlusMaskFX(41, 6, Images::Bid_Top, (27 * 3) + currentPlane); 
+                    SpritesU::drawPlusMaskFX(41, 6, Images::Bid_Top, (1 * 3) + currentPlane); 
 
                     if (dealer == 3) {
                         bidder_Y = 6;                       
@@ -339,7 +339,7 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Alone:
                 {
-                    SpritesU::drawPlusMaskFX(41, 6, Images::Bid_Top, (28 * 3) + currentPlane); 
+                    SpritesU::drawPlusMaskFX(41, 6, Images::Bid_Top, (2 * 3) + currentPlane); 
 
                     if (dealer == 3) {
                         bidder_Y = 6;                       
@@ -350,7 +350,7 @@ void renderBids(uint8_t currentPlane) {
 
             case BidType::Pass:
 
-                SpritesU::drawPlusMaskFX(41, 6, Images::Bid_Top, (26 * 3) + currentPlane); 
+                SpritesU::drawPlusMaskFX(41, 6, Images::Bid_Top, (0 * 3) + currentPlane); 
 
                 if (dealer == 3) {
                     bidder_X = 64;

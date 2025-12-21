@@ -135,7 +135,6 @@ convert_header(IMAGES + 'Cards/Flip/Flip.png',                                  
 convert_header(IMAGES + 'Bid/Bid_Round1.png',                                                  BASE + 'Images.hpp', 'Bid_Round1', 4, 35, 24)
 convert_header(IMAGES + 'Bid/Bid_Round2.png',                                                  BASE + 'Images.hpp', 'Bid_Round2', 4, 48, 24)
 convert_header(IMAGES + 'Bid/Bid_Suits.png',                                                   BASE + 'Images.hpp', 'Bid_Suits', 4, 9, 8)
-convert_header(IMAGES + 'Bid/Bid_Numbers.png',                                                 BASE + 'Images.hpp', 'Bid_Numbers', 4, 7, 8)
 
 convert_header(IMAGES + 'Bid/Bid_Top.png',                                                     BASE + 'Images.hpp', 'Bid_Top', 4, 23, 8)
 convert_header(IMAGES + 'Bid/Bid_Bottom.png',                                                  BASE + 'Images.hpp', 'Bid_Bottom', 4, 23, 8)

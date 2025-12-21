@@ -131,8 +131,8 @@ void play_Init() {
     // #ifdef DEBUG_RAND
     a.initRandomSeed();
     uint16_t r = random(8000);
-    DEBUG_PRINT("Rand ");
-    DEBUG_PRINTLN(r);
+    // DEBUG_PRINT("Rand ");
+    // DEBUG_PRINTLN(r);
     // r=4345;
     randomSeed(r);
     game.setRandomSeed(r);
@@ -1110,8 +1110,8 @@ void play_Update() {
 
         case GameState::Play_EndOfRound:
 
-            if ((gameRound.getScore(0) >= 3) ||
-                (gameRound.getScore(1) >= 3)) {  
+            if ((gameRound.getScore(0) >= Constants::WinningScore) ||
+                (gameRound.getScore(1) >= Constants::WinningScore)) {  
 
                 gameState = GameState::Play_EndOfGame;
                 endOfGame_Y = 0;
@@ -1306,7 +1306,7 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
                 uint8_t idx = 0;
                 if ((game.getFrameCount() % 140) < 64) idx = game.getFrameCount() % 140 / 2;
 
-                if (gameRound.getScore(Constants::HumanTeam) >= 500 || gameRound.getScore(Constants::BotTeam) <= 500) {
+                if (gameRound.getScore(Constants::HumanTeam) >= Constants::WinningScore) {
                     SpritesU::drawOverwriteFX(16, endOfGame_Y - 55, Images::You_Won, (idx * 3) + currentPlane);
                 }
                 else {
