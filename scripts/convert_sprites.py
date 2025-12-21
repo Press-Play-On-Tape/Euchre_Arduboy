@@ -121,26 +121,9 @@ convert_header(IMAGES + 'Cards/Hand_Right.png',                                 
 convert_header(IMAGES + 'Cards/Hand_Top.png',                                                  BASE + 'Images.hpp', 'Hand_Top', 4, 43, 8)
 convert_header(IMAGES + 'Cards/Suit.png',                                                      BASE + 'Images.hpp', 'Suit', 4, 14, 16)
 
-# convert_header(IMAGES + 'Cards/Cards_Bottom_Grey.png',                                         BASE + 'Images.hpp', 'Cards_Bottom_Grey', 4, 18, 24)
-# convert_header(IMAGES + 'Cards/Cards_Left_Grey.png',                                           BASE + 'Images.hpp', 'Cards_Left_Grey', 4, 23, 24)
-# convert_header(IMAGES + 'Cards/Cards_Right_Grey.png',                                          BASE + 'Images.hpp', 'Cards_Right_Grey', 4, 23, 24)
-
-convert_header(IMAGES + 'Titles/PPOT.png',                                                     BASE + 'Images.hpp', 'PPOT', 4, 128, 64)
-convert_header(IMAGES + 'Titles/Sound_Volume_Grey.png',                                        BASE + 'Images.hpp', 'Sound_Volume_Grey', 4, 22, 16)
-convert_header(IMAGES + 'Titles/Sound_Volume_White.png',                                       BASE + 'Images.hpp', 'Sound_Volume_White', 4, 22, 16)
-convert_header(IMAGES + 'Titles/Sound_Checkbox.png',                                           BASE + 'Images.hpp', 'Sound_Checkbox', 4)
-convert_header(IMAGES + 'Titles/Title.png',                                                    BASE + 'Images.hpp', 'Title', 4, 48, 40, maskImage=False)
-
-
 convert_header(IMAGES + 'HUD/HUD_Top.png',                                                     BASE + 'Images.hpp', 'HUD_Top', 4, 23, 32)
 convert_header(IMAGES + 'HUD/HUD_Bottom.png',                                                  BASE + 'Images.hpp', 'HUD_Bottom', 4, 23, 32)
-convert_header(IMAGES + 'HUD/Score_Numbers_Bottom.png',                                        BASE + 'Images.hpp', 'Score_Numbers_Bottom', 4, 7, 8)
-convert_header(IMAGES + 'HUD/Score_Numbers_Left.png',                                          BASE + 'Images.hpp', 'Score_Numbers_Left', 4, 7, 8)
-convert_header(IMAGES + 'HUD/Score_Numbers_Right.png',                                         BASE + 'Images.hpp', 'Score_Numbers_Right', 4, 7, 8)
-convert_header(IMAGES + 'HUD/Bid.png',                                                         BASE + 'Images.hpp', 'Bid', 4, 38, 16)
-# convert_header(IMAGES + 'HUD/Numbers.png',                                                     BASE + 'Images.hpp', 'Numbers', 4, 16, 16)
 convert_header(IMAGES + 'HUD/Numbers_3x5.png',                                                 BASE + 'Images.hpp', 'Numbers_3x5', 4, 13, 8)
-convert_header(IMAGES + 'HUD/HighScores.png',                                                  BASE + 'Images.hpp', 'HighScores', 4)
 convert_header(IMAGES + 'HUD/HUD_Trick_Score.png',                                             BASE + 'Images.hpp', 'HUD_Trick_Score', 4, 7, 8)
 convert_header(IMAGES + 'HUD/HUD_Game_Score.png',                                              BASE + 'Images.hpp', 'HUD_Game_Score', 4, 14, 8)
 
@@ -149,7 +132,6 @@ convert_header(IMAGES + 'Cards/Hand_Full_Grey.png',                             
 convert_header(IMAGES + 'Cards/Rotate/Rotate.png',                                             BASE + 'Images.hpp', 'Rotate', 4, 30, 32)
 convert_header(IMAGES + 'Cards/Flip/Flip.png',                                                 BASE + 'Images.hpp', 'Flip', 4, 16, 24)
 
-# convert_header(IMAGES + 'Bid/Bid_Panel.png',                                                   BASE + 'Images.hpp', 'Bid_Panel', 4, 52, 24)
 convert_header(IMAGES + 'Bid/Bid_Round1.png',                                                  BASE + 'Images.hpp', 'Bid_Round1', 4, 35, 24)
 convert_header(IMAGES + 'Bid/Bid_Round2.png',                                                  BASE + 'Images.hpp', 'Bid_Round2', 4, 48, 24)
 convert_header(IMAGES + 'Bid/Bid_Suits.png',                                                   BASE + 'Images.hpp', 'Bid_Suits', 4, 9, 8)
@@ -164,12 +146,13 @@ convert_header(IMAGES + 'Bid/Bid_Bottom_Discard.png',                           
 convert_header(IMAGES + 'Bid/Bid_Left_Discard.png',                                            BASE + 'Images.hpp', 'Bid_Left_Discard', 4, 7, 32)
 convert_header(IMAGES + 'Bid/Bid_Right_Discard.png',                                           BASE + 'Images.hpp', 'Bid_Right_Discard', 4, 7, 32)
 convert_header(IMAGES + 'Bid/Bid_Result.png',                                                  BASE + 'Images.hpp', 'Bid_Result', 4, 40, 8)
-convert_header(IMAGES + 'Bid/Bid_Result_Narrow.png',                                           BASE + 'Images.hpp', 'Bid_Result_Narrow', 4, 21, 8)
 convert_header(IMAGES + 'Titles/TitleEuchre.png',                                              BASE + 'Images.hpp', 'TitleEuchre', 4, 128, 64)
 convert_header(IMAGES + 'Titles/TitleEuchre_Assist.png',                                       BASE + 'Images.hpp', 'TitleEuchre_Assist', 4)
 convert_header(IMAGES + 'Dealer.png',                                                          BASE + 'Images.hpp', 'Dealer', 4)
 convert_header(IMAGES + 'EveryonePassed.png',                                                  BASE + 'Images.hpp', 'EveryonePassed', 4)
 convert_header(IMAGES + 'KittyInstructions.png',                                               BASE + 'Images.hpp', 'KittyInstructions', 4)
 convert_header(IMAGES + 'ChooseSuit.png',                                                      BASE + 'Images.hpp', 'ChooseSuit', 4, 49, 24)
+
+convert_header(IMAGES + 'Titles/PPOT.png',                                                     BASE + 'Images.hpp', 'PPOT', 4, 128, 64)
 convert_header(IMAGES + 'Titles/You_Won.png',                                                  BASE + 'Images.hpp', 'You_Won', 4, 75, 48)
 convert_header(IMAGES + 'Titles/You_Lost.png',                                                 BASE + 'Images.hpp', 'You_Lost', 4, 75, 48)

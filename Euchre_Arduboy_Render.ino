@@ -571,7 +571,7 @@ void renderHUD(uint8_t currentPlane, bool displayCard, bool displayWinningBid) {
 
         }
 
-        SpritesU::drawOverwriteFX(107, 29, Images::Bid_Result_Narrow, (gameRound.getHighestBid().getImageIndex() * 3) + currentPlane);
+        // SpritesU::drawOverwriteFX(107, 29, Images::Bid_Result_Narrow, (gameRound.getHighestBid().getImageIndex() * 3) + currentPlane);
         
         if (gameRound.getWinningBid_Idx() != Constants::WinningBid_None) {
 
