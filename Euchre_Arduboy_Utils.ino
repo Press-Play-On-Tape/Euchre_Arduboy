@@ -29,7 +29,6 @@ void play_CardSelected() {
     gameState = GameState::Play_Hand;
 
 
-
     // Is it the end of the round?
 
     if (gameRound.getFirstPlayer_Idx() == gameRound.getCurrentPlayer_Idx()) {

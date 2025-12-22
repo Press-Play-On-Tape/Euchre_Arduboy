@@ -470,11 +470,11 @@ void play_Update() {
                             DEBUG_PRINTLN("Go Alone");
                             #endif
 
-                            game.players[dealer].addCard(gameRound.getKitty());
-                            game.players[dealer].getCard(5).setSelected(true);
+                            // game.players[dealer].addCard(gameRound.getKitty());
+                            // game.players[dealer].getCard(5).setSelected(true);
 
                             completeBid(playerCurrentlyBidding, BidType::Alone, gameRound.getKitty()->getSuit());
-                            gameState = GameState::Handle_Kitty;
+                            gameState = GameState::Play_Round_Delay;
 
                         }
                         else if (bid >= Constants::GoWithPartner) {
@@ -483,11 +483,11 @@ void play_Update() {
                             DEBUG_PRINTLN("Go!");
                             #endif
 
-                            game.players[dealer].addCard(gameRound.getKitty());
-                            game.players[dealer].getCard(5).setSelected(true);
+                            // game.players[dealer].addCard(gameRound.getKitty());
+                            // game.players[dealer].getCard(5).setSelected(true);
                         
                             completeBid(playerCurrentlyBidding, BidType::Partner, gameRound.getKitty()->getSuit());
-                            gameState = GameState::Handle_Kitty;
+                            gameState = GameState::Play_Round_Delay;
                         
                         }
                         else {
@@ -845,7 +845,7 @@ void play_Update() {
                         gameRound.clearKitty();
 
                         if (!playerAssist) highlightSuitInHand();
-                        gameState++;
+                        gameState = GameState::Play_Round_Start;
 
                     }
                     else {
@@ -905,7 +905,7 @@ void play_Update() {
                             }
 
                             if (!playerAssist) highlightSuitInHand();
-                            gameState++;
+                            gameState = GameState::Play_Round_Start;
 
                         }
 
@@ -930,7 +930,7 @@ void play_Update() {
                         gameRound.setRound(0);
                         gameRound.clearKitty();
                         if (!playerAssist) highlightSuitInHand();
-                        gameState++;
+                        gameState = GameState::Play_Round_Start;
 
                     }
 
@@ -940,7 +940,7 @@ void play_Update() {
                         gameRound.clearKitty();
                         game.players[dealer].handleKitty();
                         if (!playerAssist) highlightSuitInHand();
-                        gameState++;
+                        gameState = GameState::Play_Round_Start;
 
                     }
 
@@ -951,6 +951,17 @@ void play_Update() {
             break;
 
         case GameState::Play_Round_Delay:
+
+            if (justPressed & A_BUTTON) {
+
+                uint8_t dealer = gameRound.getDealer_Idx();
+
+                game.players[dealer].addCard(gameRound.getKitty());
+                game.players[dealer].getCard(5).setSelected(true);
+                gameState = GameState::Handle_Kitty;
+            
+            }
+
             break;
 
         case GameState::Play_Round_Start:
@@ -1109,6 +1120,7 @@ void play_Update() {
         case GameState::Play_EndOfHand:
 
             if (gameRound.getRound() == 5) {
+Serial.println("gameRound.getRound() == 5");
 
                 uint8_t biddingTeam = gameRound.getWinningBid_Team();
                 uint8_t winningTeam = gameRound.getTeam_TrickCount(0) > 0 ? 0 : 1;
@@ -1224,7 +1236,7 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
             if (playerCurrentlyBidding == Constants::HumanPlayer) {
 
-                SpritesU::drawPlusMaskFX(45, 15, Images::Bid_Round1, (static_cast<uint8_t>(bidInput.getMode()) * 3) + currentPlane - 3);
+                SpritesU::drawPlusMaskFX(44, 15, Images::Bid_Round1, (static_cast<uint8_t>(bidInput.getMode()) * 3) + currentPlane - 3);
             
             }
            
@@ -1308,11 +1320,7 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
             renderPlayerHands(currentPlane, false, false);
             renderHUD(currentPlane, false, false);
 
-            if (playerCurrentlyBidding == Constants::HumanPlayer) {
-
-                SpritesU::drawPlusMaskFX(45, 15, Images::Bid_Round1, (static_cast<uint8_t>(bidInput.getMode()) * 3) + currentPlane - 3);
-            
-            }
+            SpritesU::drawOverwriteFX(44, 14, Images::Delay, (gameRound.getWinningBid_Idx() * 3) + currentPlane);
            
             renderBids(currentPlane);
 

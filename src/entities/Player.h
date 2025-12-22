@@ -237,9 +237,9 @@ struct Player {
                                 }
                                 else {
 
-                                    handScore = handScore + 40;
+                                    handScore = handScore + 30;
                                     #ifdef DEBUG_BID
-                                    DEBUG_PRINT("40 Non-Trump, ");
+                                    DEBUG_PRINT("30 Non-Trump, ");
                                     #endif                                        
 
                                 }
@@ -326,24 +326,24 @@ struct Player {
                                     switch (i) {
 
                                         case 0:
-                                            handScore = handScore + 20;
+                                            handScore = handScore + 15;
                                             #ifdef DEBUG_BID
-                                            DEBUG_PRINT("20 Non-Trumps (no-Ace), ");
+                                            DEBUG_PRINT("15 Non-Trumps (no-Ace), ");
                                             #endif                                                    
                                             break;
 
                                         default:
 
                                             if (this->cards[i - 1].getSuit() == card.getSuit()) {
-                                                handScore = handScore + 30;
+                                                handScore = handScore + 20;
                                                 #ifdef DEBUG_BID
-                                                DEBUG_PRINT("30 Non-Trumps (inc Ace), ");
+                                                DEBUG_PRINT("20 Non-Trumps (inc Ace), ");
                                                 #endif                                                    
                                             }
                                             else {
-                                                handScore = handScore + 20;
+                                                handScore = handScore + 15;
                                                 #ifdef DEBUG_BID
-                                                DEBUG_PRINT("20 Non-Trumps (no-Ace), ");
+                                                DEBUG_PRINT("15 Non-Trumps (no-Ace), ");
                                                 #endif                                                    
                                             }
 
@@ -431,6 +431,15 @@ struct Player {
 
                 }
 
+            }
+
+            if (!isDealer && (dealerCard.getRank() == Rank::Jack || dealerCard.getRank() == Rank::Right_Bower)) {
+                if (handScore > 80) {
+                    handScore = handScore - 80;
+                }
+                else {
+                    handScore = 0;
+                }
             }
 
             this->restoreHand();
