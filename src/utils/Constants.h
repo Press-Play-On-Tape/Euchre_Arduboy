@@ -76,6 +76,9 @@ namespace Constants {
     constexpr uint8_t BotTeam = 0;
     constexpr uint8_t WinningScore = 10;
 
+    constexpr uint16_t GoAlone = 220;
+    constexpr uint16_t GoWithPartner = 150;
+
     constexpr uint8_t Delay = 12;
     constexpr uint8_t Title_Start_Action = 60;
     

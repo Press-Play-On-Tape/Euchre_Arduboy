@@ -56,7 +56,9 @@ uint8_t endOfGame_Y = 0;
 
 DealPhysics dealPhysics;
 BidInput bidInput;
+uint8_t assistCursor = 0;
 bool playerAssist;
+bool screwDealer;
 
 void setup() {
 
@@ -77,6 +79,10 @@ void setup() {
     game.setFrameCount(0);
     Serial.begin(9600);
     a.initRandomSeed();
+
+    playerAssist = true;
+    screwDealer = false;
+    assistCursor = 0;
 
 }
 

@@ -163,6 +163,7 @@ enum class GameState : uint8_t {
         Bid_Player_Round2, 
         Bid_Failed,
         Handle_Kitty,
+        Play_Round_Delay,
         Play_Round_Start,
         Play_Hand,
         Play_PlayerInput,

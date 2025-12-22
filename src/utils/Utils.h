@@ -73,6 +73,14 @@ void DEBUG_PRINT_RANK(Rank rank) {
                 DEBUG_PRINT(F("R"));
                 break;
                 
+            case Rank::Joker:
+                DEBUG_PRINT(F("Joker"));
+                break;
+
+            default:
+                DEBUG_PRINT(F("Default"));
+                break;
+                
         }
 
     #endif

@@ -131,9 +131,9 @@ void play_Init() {
     // #ifdef DEBUG_RAND
     a.initRandomSeed();
     uint16_t r = random(8000);
+    // r = 7294;
     // DEBUG_PRINT("Rand ");
     // DEBUG_PRINTLN(r);
-    // r=4345;
     randomSeed(r);
     game.setRandomSeed(r);
     // #endif
@@ -363,6 +363,7 @@ void play_Update() {
 
                 game.setFrameCount(0);
                 gameState = GameState::Bid_Round1;
+                bidInput.setMode(BidMode::Pass);
                 dealKitty();
                 break;
             
@@ -384,7 +385,7 @@ void play_Update() {
 
             game.setFrameCount(0);
             gameState = GameState::Bid_Round1;
-
+            bidInput.setMode(BidMode::Pass);
 
             for (uint8_t i = 0; i < 4; i++) {
                 game.players[i].sort();
@@ -463,7 +464,7 @@ void play_Update() {
                    
                         bid = game.players[playerCurrentlyBidding].bid(gameRound.getKitty()->getSuit(), *gameRound.getKitty(), playerCurrentlyBidding == dealer);
                              
-                        if (bid >= 200) { 
+                        if (bid >= Constants::GoAlone) { 
 
                             #ifdef DEBUG
                             DEBUG_PRINTLN("Go Alone");
@@ -476,7 +477,7 @@ void play_Update() {
                             gameState = GameState::Handle_Kitty;
 
                         }
-                        else if (bid >= 150) {
+                        else if (bid >= Constants::GoWithPartner) {
                         
                             #ifdef DEBUG
                             DEBUG_PRINTLN("Go!");
@@ -509,11 +510,11 @@ void play_Update() {
                
                         switch (retBid) {
                                             
-                            case 200 ... 999:
+                            case Constants::GoAlone ... 9999:
                                 bidInput.setMode(BidMode::Alone);
                                 break;
                                             
-                            case 150 ... 199:
+                            case Constants::GoWithPartner ... Constants::GoAlone - 1:
                                 bidInput.setMode(BidMode::Bid);
                                 break;
                                             
@@ -567,6 +568,10 @@ void play_Update() {
 
                         for (uint8_t s = 0; s < 4; s++) {
 
+                            Suit suit = static_cast<Suit>(s);
+
+                            if (suit == gameRound.getKitty()->getSuit()) continue;
+
                             Card noCard;
                             noCard.setSuit(static_cast<Suit>(s));
                             noCard.setRank(Rank::None);
@@ -583,7 +588,13 @@ void play_Update() {
 
                         }
 
-                        if (bid >= 200) {
+                        if (screwDealer && dealer == playerCurrentlyBidding) {
+                        
+                            if (bid < Constants::GoWithPartner) bid = Constants::GoWithPartner;
+
+                        }
+
+                        if (bid >= Constants::GoAlone) {
 
                             #ifdef DEBUG
                             DEBUG_PRINTLN("Go Alone");
@@ -593,7 +604,7 @@ void play_Update() {
                             gameState = GameState::Play_Round_Start;
 
                         }
-                        else if (bid >= 150) {
+                        else if (bid >= Constants::GoWithPartner) {
                         
                             #ifdef DEBUG
                             DEBUG_PRINTLN("Go!");
@@ -621,10 +632,14 @@ void play_Update() {
 
                         for (uint8_t s = 0; s < 4; s++) {
 
+                            Suit suit = static_cast<Suit>(s);
+
+                            if (suit == gameRound.getKitty()->getSuit()) continue;
+
                             Card noCard;
-                            noCard.setSuit(static_cast<Suit>(s));
+                            noCard.setSuit(suit);
                             noCard.setRank(Rank::None);
-                            scores[s] = game.players[Constants::HumanPlayer].bid(static_cast<Suit>(s), noCard, false);
+                            scores[s] = game.players[Constants::HumanPlayer].bid(suit, noCard, false);
 
                         }
 
@@ -637,14 +652,20 @@ void play_Update() {
 
                         }
                
+                        if (screwDealer && dealer == Constants::HumanPlayer) {
+                        
+                            if (bid < Constants::GoWithPartner) bid = Constants::GoWithPartner;
+
+                        }
+
                         switch (bid) {
                                             
-                            case 200 ... 999:
+                            case Constants::GoAlone ... 9909:
                                 bidInput.setSuit(bidSuit);
                                 bidInput.setMode(BidMode::Alone);
                                 break;
                                             
-                            case 150 ... 199:
+                            case Constants::GoWithPartner ... Constants::GoAlone - 1:
                                 bidInput.setSuit(bidSuit);
                                 bidInput.setMode(BidMode::Bid);
                                 break;
@@ -654,6 +675,22 @@ void play_Update() {
                                 break;
 
                         }
+
+                    }
+                    else {
+
+                        bidInput.setMode(BidMode::Bid);      
+
+                        if (bidInput.getSuit() == gameRound.getKitty()->getSuit()) {
+
+                            if (bidInput.getSuit() == Suit::Spades) {
+                                bidInput.incSuit(gameRound.getKitty()->getSuit());
+                            }
+                            else {
+                                bidInput.decSuit(gameRound.getKitty()->getSuit());
+                            }
+
+                        }              
 
                     }
 
@@ -709,24 +746,29 @@ void play_Update() {
 
         case GameState::Bid_Player_Round2:
             {
-
+                uint8_t dealer = gameRound.getDealer_Idx();                    
+                bool allowPass = !(screwDealer && dealer == Constants::HumanPlayer);
+                
                 if (game.getFrameCount() < 64) {
                     break;
                 }
                         
-                uint8_t dealer = gameRound.getDealer_Idx();
-                        
                 if (justPressed & UP_BUTTON) {
                 
-                    if (bidInput.getMode() == BidMode::SuitSelect)          bidInput.incSuit();
-                    else if (bidInput.getMode() > BidMode::Pass)            bidInput.decMode();
+                    if (bidInput.getMode() == BidMode::SuitSelect) {
+                        bidInput.incSuit(gameRound.getKitty()->getSuit());
+                    }
+                    else if (allowPass && bidInput.getMode() > BidMode::Pass)           bidInput.decMode();
+                    else if (!allowPass && bidInput.getMode() > BidMode::Bid)           bidInput.decMode();
 
                 }
 
                 else if (justPressed & DOWN_BUTTON) {
 
-                    if (bidInput.getMode() == BidMode::SuitSelect)          bidInput.decSuit();
-                    else if (bidInput.getMode() < BidMode::Alone)           bidInput.incMode();
+                    if (bidInput.getMode() == BidMode::SuitSelect) {
+                        bidInput.decSuit(gameRound.getKitty()->getSuit());
+                    }
+                    else if (bidInput.getMode() < BidMode::Alone)                       bidInput.incMode();
 
                 }
 
@@ -908,6 +950,9 @@ void play_Update() {
 
             break;
 
+        case GameState::Play_Round_Delay:
+            break;
+
         case GameState::Play_Round_Start:
             {
 
@@ -1046,18 +1091,10 @@ void play_Update() {
 
                     Card &cardPlayed = game.players[gameRound.getCurrentPlayer_Idx()].getCard(selectedCard);
 
-                    switch (bid.getBidType()) {
-                    
-                        case BidType::Partner:
+                    if (cardLed.getSuit() != cardPlayed.getSuit() && game.players[gameRound.getCurrentPlayer_Idx()].hasSuit(cardLed.getSuit())) {
 
-                            if (cardLed.getSuit() != cardPlayed.getSuit() && game.players[gameRound.getCurrentPlayer_Idx()].hasSuit(cardLed.getSuit())) {
+                        return;
 
-                                return;
-
-                            }
-
-                            break;
-                    
                     }
 
                     game.players[gameRound.getCurrentPlayer_Idx()].playCard(selectedCard, false);
@@ -1197,41 +1234,37 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
         case GameState::Bid_Round_Delay:
 
-            // renderKitty(currentPlane);
             renderPlayerHands(currentPlane, false, false);
             renderHUD(currentPlane, false, false);
-
-            // if (playerCurrentlyBidding == Constants::HumanPlayer) {
-
-            //     SpritesU::drawPlusMaskFX(45, 15, Images::Bid_Round1, (static_cast<uint8_t>(bidInput.getMode()) * 3) + currentPlane - 3);
-            
-            // }
-           
             renderBids(currentPlane);
 
             break;
 
         case GameState::Bid_Round2:
         case GameState::Bid_Player_Round2:
+            {
+                uint8_t dealer = gameRound.getDealer_Idx();
+                bool allowPass = !(screwDealer && dealer == Constants::HumanPlayer);
 
-            renderKitty(currentPlane);
-            renderPlayerHands(currentPlane, false, false);
-            renderHUD(currentPlane, false, false);
+                renderKitty(currentPlane);
+                renderPlayerHands(currentPlane, false, false);
+                renderHUD(currentPlane, false, false);
 
-            if (playerCurrentlyBidding == Constants::HumanPlayer) {
+                if (playerCurrentlyBidding == Constants::HumanPlayer) {
 
-                SpritesU::drawPlusMaskFX(29, 15, Images::Bid_Round2, (static_cast<uint8_t>(bidInput.getMode()) * 3) + currentPlane);
+                    SpritesU::drawPlusMaskFX(29, 15, Images::Bid_Round2, (static_cast<uint8_t>(bidInput.getMode()) * 3) + (allowPass ? 0 : 12) + currentPlane);
 
-                if (bidInput.getMode() == BidMode::SuitSelect) {
-                    SpritesU::drawOverwriteFX(34, 23, Images::Bid_Suits, (static_cast<uint8_t>(bidInput.getSuit()) * 3) + currentPlane);
-                }
-                else {
-                    SpritesU::drawOverwriteFX(34, 23, Images::Bid_Suits, ((static_cast<uint8_t>(bidInput.getSuit()) + 4) * 3) + currentPlane);
+                    if (bidInput.getMode() == BidMode::SuitSelect) {
+                        SpritesU::drawOverwriteFX(34, 23, Images::Bid_Suits, (static_cast<uint8_t>(bidInput.getSuit()) * 3) + currentPlane);
+                    }
+                    else {
+                        SpritesU::drawOverwriteFX(34, 23, Images::Bid_Suits, ((static_cast<uint8_t>(bidInput.getSuit()) + 4) * 3) + currentPlane);
+                    }
+                
                 }
             
+                renderBids(currentPlane);
             }
-           
-            renderBids(currentPlane);
 
             break;
 
@@ -1265,6 +1298,23 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
             renderHUD(currentPlane, false, true);
             renderBids(currentPlane);
             renderDiscard(currentPlane);
+
+            break;
+
+
+        case GameState::Play_Round_Delay:
+
+            renderKitty(currentPlane);
+            renderPlayerHands(currentPlane, false, false);
+            renderHUD(currentPlane, false, false);
+
+            if (playerCurrentlyBidding == Constants::HumanPlayer) {
+
+                SpritesU::drawPlusMaskFX(45, 15, Images::Bid_Round1, (static_cast<uint8_t>(bidInput.getMode()) * 3) + currentPlane - 3);
+            
+            }
+           
+            renderBids(currentPlane);
 
             break;
 

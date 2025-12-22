@@ -6,8 +6,8 @@ using uint24_t = __uint24;
 
 // Initialize FX hardware using  FX::begin(FX_DATA_PAGE); in the setup() function.
 
-constexpr uint16_t FX_DATA_PAGE  = 0xf8ff;
-constexpr uint24_t FX_DATA_BYTES = 454683;
+constexpr uint16_t FX_DATA_PAGE  = 0xf8e5;
+constexpr uint24_t FX_DATA_BYTES = 461429;
 
 constexpr uint16_t FX_SAVE_PAGE  = 0xfff0;
 constexpr uint24_t FX_SAVE_BYTES = 2;
@@ -65,22 +65,23 @@ namespace Images
   constexpr uint24_t Flip = 0x03AEC2;
   constexpr uint24_t Bid_Round1 = 0x03C0C4;
   constexpr uint24_t Bid_Round2 = 0x03C828;
-  constexpr uint24_t Bid_Suits = 0x03D5AA;
-  constexpr uint24_t Bid_Top = 0x03D684;
-  constexpr uint24_t Bid_Bottom = 0x03D824;
-  constexpr uint24_t Bid_Left = 0x03D9C4;
-  constexpr uint24_t Bid_Right = 0x03DB40;
-  constexpr uint24_t Bid_Top_Discard = 0x03DCBC;
-  constexpr uint24_t Bid_Bottom_Discard = 0x03DD60;
-  constexpr uint24_t Bid_Left_Discard = 0x03DE04;
-  constexpr uint24_t Bid_Right_Discard = 0x03DEAE;
-  constexpr uint24_t TitleEuchre = 0x03DF58;
-  constexpr uint24_t TitleEuchre_Assist = 0x055F5A;
-  constexpr uint24_t Dealer = 0x056B5C;
-  constexpr uint24_t EveryonePassed = 0x056B7C;
-  constexpr uint24_t KittyInstructions = 0x056C5C;
-  constexpr uint24_t PPOT = 0x056E95;
-  constexpr uint24_t You_Won = 0x059E97;
-  constexpr uint24_t You_Lost = 0x064759;
+  constexpr uint24_t Bid_Suits = 0x03E32A;
+  constexpr uint24_t Bid_Top = 0x03E404;
+  constexpr uint24_t Bid_Bottom = 0x03E5A4;
+  constexpr uint24_t Bid_Left = 0x03E744;
+  constexpr uint24_t Bid_Right = 0x03E8C0;
+  constexpr uint24_t Bid_Top_Discard = 0x03EA3C;
+  constexpr uint24_t Bid_Bottom_Discard = 0x03EAE0;
+  constexpr uint24_t Bid_Left_Discard = 0x03EB84;
+  constexpr uint24_t Bid_Right_Discard = 0x03EC2E;
+  constexpr uint24_t TitleEuchre = 0x03ECD8;
+  constexpr uint24_t TitleEuchre_Assist = 0x056CDA;
+  constexpr uint24_t TitleEuchre_Assist_Cursor = 0x0584DC;
+  constexpr uint24_t Dealer = 0x0585B6;
+  constexpr uint24_t EveryonePassed = 0x0585D6;
+  constexpr uint24_t KittyInstructions = 0x0586B6;
+  constexpr uint24_t PPOT = 0x0588EF;
+  constexpr uint24_t You_Won = 0x05B8F1;
+  constexpr uint24_t You_Lost = 0x0661B3;
 }
 

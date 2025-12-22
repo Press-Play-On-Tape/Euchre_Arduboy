@@ -215,7 +215,7 @@ struct GameRound {
         void clearKitty() {
 
             this->kitty.setRank(Rank::None);
-            this->kitty.setSuit(Suit::None);
+            // this->kitty.setSuit(Suit::None);
             
         }
 

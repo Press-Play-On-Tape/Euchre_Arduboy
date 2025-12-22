@@ -37,18 +37,48 @@ void title_Update() {
             break;
 
         case GameState::Title_Assist:
-      
+
             if (justPressed & A_BUTTON) {
 
-                playerAssist = true;
-                gameState = GameState::Play_Init;
+                switch (assistCursor) {
+                
+                    case 0:
+                        playerAssist = !playerAssist;
+                        break;
+                    
+                    case 1:
+                        screwDealer = !screwDealer;
+                        break;
+
+                }
 
             }
       
-            if (justPressed & B_BUTTON) {
+            if (justPressed & UP_BUTTON) {
 
-                playerAssist = false;
-                gameState = GameState::Play_Init;
+                switch (assistCursor) {
+                    
+                    case 1:
+                        assistCursor = 0;
+                        break;
+
+                }
+
+            }
+
+            if (justPressed & DOWN_BUTTON) {
+
+                switch (assistCursor) {
+                    
+                    case 0:
+                        assistCursor = 1;
+                        break;
+                    
+                    case 1:
+                        gameState = GameState::Play_Init;
+                        break;
+
+                }
 
             }
 
@@ -79,7 +109,10 @@ void title(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
         case GameState::Title_Assist:
 
-            SpritesU::drawOverwriteFX(0, 0, Images::TitleEuchre_Assist, currentPlane);
+            SpritesU::drawOverwriteFX(0, 0, Images::TitleEuchre_Assist, (assistCursor * 3) + currentPlane);
+
+            if (playerAssist)   SpritesU::drawPlusMaskFX(13, 9, Images::TitleEuchre_Assist_Cursor, (assistCursor * 3) + currentPlane);
+            if (screwDealer)    SpritesU::drawPlusMaskFX(13, 27, Images::TitleEuchre_Assist_Cursor, ((1 - assistCursor) * 3) + currentPlane);
 
             break;
 
