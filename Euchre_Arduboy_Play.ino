@@ -1120,7 +1120,6 @@ void play_Update() {
         case GameState::Play_EndOfHand:
 
             if (gameRound.getRound() == 5) {
-Serial.println("gameRound.getRound() == 5");
 
                 uint8_t biddingTeam = gameRound.getWinningBid_Team();
                 uint8_t winningTeam = gameRound.getTeam_TrickCount(0) > 0 ? 0 : 1;
