@@ -262,7 +262,6 @@ struct GameRound {
         
             this->firstPlayer = winningPlayer;
             this->currentPlayer = winningPlayer;
-            // this->handCount--;
 
         }
 

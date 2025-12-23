@@ -71,8 +71,6 @@ void play_CardSelected() {
 
         }
 
-        // If playing misere, did the calling hand win?
-
         #ifdef DEBUG_BASIC
             DEBUG_PRINT(F("Highest hand "));
             DEBUG_PRINT(gameRound.getWinningHand());
