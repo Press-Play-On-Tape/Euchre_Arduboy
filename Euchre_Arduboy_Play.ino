@@ -131,7 +131,7 @@ void play_Init() {
     // #ifdef DEBUG_RAND
     a.initRandomSeed();
     uint16_t r = random(8000);
-    // r = 7294;
+    // r = 2592;
     // DEBUG_PRINT("Rand ");
     // DEBUG_PRINTLN(r);
     randomSeed(r);
@@ -195,6 +195,8 @@ void play_Update() {
             playerCurrentlyBidding = (gameRound.getDealer_Idx() + 1) % 4;
             // gameRound.setDealer_Idx(0); //SJH
             // playerCurrentlyBidding = (0 + 1) % 4;
+            // gameRound.setDealer_Idx(3); //SJH
+            // playerCurrentlyBidding = (3 + 1) % 4;
 
             if (gameRound.getDealer_Idx() == 0) {
                 populateRotateDetails(0);
@@ -611,7 +613,8 @@ void play_Update() {
                             #endif
                         
                             completeBid(playerCurrentlyBidding, BidType::Partner, bidSuit);
-                            gameState = GameState::Play_Round_Start;
+                            // gameState = GameState::Play_Round_Start;
+                            gameState = GameState::Play_Round_Delay;
 
                         }
                         else {
@@ -628,6 +631,19 @@ void play_Update() {
                 }
                 else {
 
+                    bidInput.setMode(BidMode::Pass);      
+
+                    if (bidInput.getSuit() == gameRound.getKitty()->getSuit()) {
+
+                        if (bidInput.getSuit() == Suit::Spades) {
+                            bidInput.incSuit(gameRound.getKitty()->getSuit());
+                        }
+                        else {
+                            bidInput.decSuit(gameRound.getKitty()->getSuit());
+                        }
+
+                    } 
+                    
                     if (playerAssist) {
 
                         for (uint8_t s = 0; s < 4; s++) {
@@ -675,22 +691,6 @@ void play_Update() {
                                 break;
 
                         }
-
-                    }
-                    else {
-
-                        bidInput.setMode(BidMode::Bid);      
-
-                        if (bidInput.getSuit() == gameRound.getKitty()->getSuit()) {
-
-                            if (bidInput.getSuit() == Suit::Spades) {
-                                bidInput.incSuit(gameRound.getKitty()->getSuit());
-                            }
-                            else {
-                                bidInput.decSuit(gameRound.getKitty()->getSuit());
-                            }
-
-                        }              
 
                     }
 
@@ -954,11 +954,19 @@ void play_Update() {
 
             if (justPressed & A_BUTTON) {
 
-                uint8_t dealer = gameRound.getDealer_Idx();
+                if (gameRound.getKitty()->getRank() != Rank::None) {
 
-                game.players[dealer].addCard(gameRound.getKitty());
-                game.players[dealer].getCard(5).setSelected(true);
-                gameState = GameState::Handle_Kitty;
+                    uint8_t dealer = gameRound.getDealer_Idx();
+
+                    game.players[dealer].addCard(gameRound.getKitty());
+                    game.players[dealer].getCard(5).setSelected(true);
+                    game.players[dealer].sort();
+                    gameState = GameState::Handle_Kitty;
+
+                }
+                else {
+                    gameState = GameState::Play_Round_Start;
+                }
             
             }
 
@@ -1296,6 +1304,9 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
                     SpritesU::drawOverwriteFX(21, 15, Images::KittyInstructions, currentPlane);
                 }
 
+                renderHUD(currentPlane, false, true);
+                renderBids(currentPlane);
+                renderDiscard(currentPlane);
                 renderPlayerHands(currentPlane, true, false);
 
             }
@@ -1303,12 +1314,11 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
                 renderDealer(currentPlane);
                 renderPlayerHands(currentPlane, false, false);
+                renderHUD(currentPlane, false, true);
+                renderBids(currentPlane);
+                renderDiscard(currentPlane);
 
             }
-
-            renderHUD(currentPlane, false, true);
-            renderBids(currentPlane);
-            renderDiscard(currentPlane);
 
             break;
 
@@ -1317,9 +1327,14 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
             renderKitty(currentPlane);
             renderPlayerHands(currentPlane, false, false);
-            renderHUD(currentPlane, false, false);
+            renderHUD(currentPlane, false, true);
 
-            SpritesU::drawOverwriteFX(44, 14, Images::Delay, (gameRound.getWinningBid_Idx() * 3) + currentPlane);
+            if (gameRound.getKitty()->getRank() == Rank::None) {
+                SpritesU::drawOverwriteFX(33, 14, Images::Delay, (gameRound.getWinningBid_Idx() * 3) + currentPlane);
+            }
+            else {
+                SpritesU::drawOverwriteFX(44, 14, Images::Delay, (gameRound.getWinningBid_Idx() * 3) + currentPlane);
+            }
            
             renderBids(currentPlane);
 

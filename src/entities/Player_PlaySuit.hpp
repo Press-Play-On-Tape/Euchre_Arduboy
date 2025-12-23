@@ -60,7 +60,7 @@ void playSuit_Follow(bool isHuman) {
 
                     if (this->playLowest_InSuit(cardLedSuit, isHuman))                                          return; // Throw rubbish ..
                     else if (this->playLowest_AllSuit(trumps, isHuman))                                         return; // Throw rubbish ..
-                    else this->playLowest_AllSuit(trumps, isHuman);                                             return; // Throw rubbish ..
+                    else this->playLowest_InSuit(trumps, isHuman);                                              return; // Trump it ..
 
                 }
 
@@ -288,8 +288,8 @@ void playSuit_Follow(bool isHuman) {
                 DEBUG_PRINTLN(F("22. Trump has been led."));
             #endif
 
-            if (this->playTop_InSuit(trumps, trumps, isHuman))                                                     return; // If we have the winning trump then play it ..
-            else if (this->playNextHighest_LargerThan_InSuit(trumps, largestTrump.getRank(), isHuman))             return; // Win hand with lowest possible trump ..
+            // if (this->playTop_InSuit(trumps, trumps, isHuman))                                                     return; // If we have the winning trump then play it ..
+            if (this->playNextHighest_LargerThan_InSuit(trumps, largestTrump.getRank(), isHuman))                  return; // Win hand with lowest possible trump ..
             else if (this->playLowest_InSuit(trumps, isHuman))                                                     return; // Follow suit ..
             else if (this->playLowest_AllSuit(trumps, isHuman))                                                    return; // Throw rubbish ..
 
@@ -309,6 +309,7 @@ void playSuit_Follow(bool isHuman) {
                 if (this->playLowest_InSuit(cardLedSuit, isHuman))                                                 return; // Follow suit  ..
                 else if (this->playNextHighest_LargerThan_InSuit(trumps, largestTrump.getRank(), isHuman))         return; // Over trump ..
                 else if (this->playLowest_AllSuit(trumps, isHuman))                                                return; // Throw rubbish ..
+                else this->playLowest_InSuit(trumps, isHuman);                                                     return; // Trump it ..
 
             }
             else {
@@ -359,8 +360,8 @@ void playSuit_Follow_Alone(bool isHuman) {
             DEBUG_PRINTLN(F("22. Trump has been led."));
         #endif
 
-        if (this->playTop_InSuit(trumps, trumps, isHuman))                                                     return; // If we have the winning trump then play it ..
-        else if (this->playNextHighest_LargerThan_InSuit(trumps, largestTrump.getRank(), isHuman))             return; // Win hand with lowest possible trump ..
+        //if (this->playTop_InSuit(trumps, trumps, isHuman))                                                     return; // If we have the winning trump then play it ..
+        if (this->playNextHighest_LargerThan_InSuit(trumps, largestTrump.getRank(), isHuman))                  return; // Win hand with lowest possible trump ..
         else if (this->playLowest_InSuit(trumps, isHuman))                                                     return; // Follow suit ..
         else if (this->playLowest_AllSuit(trumps, isHuman))                                                    return; // Throw rubbish ..
 
@@ -434,8 +435,8 @@ void playSuit_Lead(bool isHuman) {
             #endif
 
             // if (this->playJoker(trumps, isHuman))                                                                 return;  // Conventional lead .. 
-            // if (this->playLowest_LowerThan_InSuit(trumps, Rank::Ten, isHuman))                                    return; // Defer to partner with little trump ..
-            if (this->playTop_AllSuit(trumps, isHuman))                                                           return; // Play a wining ace ..
+            if (this->playHighest_LargerThan_InSuit(trumps, Rank::Left_Bower, isHuman))                           return; // Classic lead of Right Bower ..
+            else if (this->playTop_AllSuit(trumps, isHuman))                                                      return; // Play a wining ace ..
             else if (this->playLowest_WithSecondHighest_AllSuit(trumps, trumps, isHuman))                         return; // Play a small card from any other suit where you hold the second largest card in that suit.
             else if (this->playLowest_ExcludeSuit(trumps, suit1, suit2, isHuman))                                 return; // Play a small card from any other suit that the other team did not call.
             else if (this->playLowest_AllSuit(trumps, isHuman))                                                   return; // Play a small card from any other suit.
