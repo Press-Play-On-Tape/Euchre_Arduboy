@@ -10,6 +10,7 @@ void title_Init() {
 
     gameState = GameState::Title_OptPlay;
     titleCounter = 0;
+    assistCursor = 0;
     game.resetFrameCount();
 
 }
@@ -49,6 +50,10 @@ void title_Update() {
                     case 1:
                         screwDealer = !screwDealer;
                         break;
+                    
+                    case 2:
+                        canadianLoner = !canadianLoner;
+                        break;
 
                 }
 
@@ -56,11 +61,9 @@ void title_Update() {
       
             if (justPressed & UP_BUTTON) {
 
-                switch (assistCursor) {
-                    
-                    case 1:
-                        assistCursor = 0;
-                        break;
+                if (assistCursor > 0) {
+
+                    assistCursor--;
 
                 }
 
@@ -71,10 +74,11 @@ void title_Update() {
                 switch (assistCursor) {
                     
                     case 0:
-                        assistCursor = 1;
+                    case 1:
+                        assistCursor++;
                         break;
                     
-                    case 1:
+                    case 2:
                         gameState = GameState::Play_Init;
                         break;
 
@@ -111,8 +115,9 @@ void title(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
             SpritesU::drawOverwriteFX(0, 0, Images::TitleEuchre_Assist, (assistCursor * 3) + currentPlane);
 
-            if (playerAssist)   SpritesU::drawPlusMaskFX(13, 9, Images::TitleEuchre_Assist_Cursor, (assistCursor * 3) + currentPlane);
-            if (screwDealer)    SpritesU::drawPlusMaskFX(13, 27, Images::TitleEuchre_Assist_Cursor, ((1 - assistCursor) * 3) + currentPlane);
+            if (playerAssist)   SpritesU::drawPlusMaskFX(9, 14, Images::TitleEuchre_Assist_Cursor, (!(assistCursor == 0) * 3) + currentPlane);
+            if (screwDealer)    SpritesU::drawPlusMaskFX(9, 27, Images::TitleEuchre_Assist_Cursor, (!(assistCursor == 1) * 3) + currentPlane);
+            if (canadianLoner)  SpritesU::drawPlusMaskFX(9, 40, Images::TitleEuchre_Assist_Cursor, (!(assistCursor == 2) * 3) + currentPlane);
 
             break;
 

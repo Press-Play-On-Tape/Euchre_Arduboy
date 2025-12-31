@@ -59,6 +59,7 @@ BidInput bidInput;
 uint8_t assistCursor = 0;
 bool playerAssist;
 bool screwDealer;
+bool canadianLoner;
 
 void setup() {
 
@@ -82,6 +83,7 @@ void setup() {
 
     playerAssist = true;
     screwDealer = false;
+    canadianLoner = false;
     assistCursor = 0;
 
 }

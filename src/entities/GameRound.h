@@ -513,7 +513,6 @@ struct GameRound {
 
         bool hasHandBeenTrumped() {
 
-            BidType bidType = winningBid_Type();
             Suit trumps = winningBid_Suit();
 
             for (uint8_t i = 0; i < 4; i++) {
@@ -702,12 +701,7 @@ struct GameRound {
 
         uint8_t getWinningHand() {
 
-            return this->getWinningHand(this->bid[this->winningBidIdx].getBidType());
-
-        }
-
-
-        uint8_t getWinningHand(BidType bidType) {
+            BidType bidType = this->bid[this->winningBidIdx].getBidType();
 
             #if defined(DEBUG) && defined(DEBUG_PLAYER_WINNING_HAND)
 

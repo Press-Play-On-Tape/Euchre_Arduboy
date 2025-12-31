@@ -4,8 +4,8 @@
     {
       "title": "Euchre",
       "filename": "Euchre_Arduboy_Mini.hex",
-      "flashdata": "Euchre_Arduboy_Mini-data.bin",
-      "flashsave": "Euchre_Arduboy_Mini-save.bin",
+      "flashdata": "Euchre_Arduboy-data.bin",
+      "flashsave": "Euchre_Arduboy-save.bin",
       "device": "ArduboyMini"
     }
   ]

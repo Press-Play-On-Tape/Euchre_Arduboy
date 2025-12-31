@@ -131,7 +131,7 @@ void play_Init() {
     // #ifdef DEBUG_RAND
     a.initRandomSeed();
     uint16_t r = random(8000);
-    // r = 2592;
+    // r = 2419;
     // DEBUG_PRINT("Rand ");
     // DEBUG_PRINTLN(r);
     randomSeed(r);
@@ -479,7 +479,7 @@ void play_Update() {
                             gameState = GameState::Play_Round_Delay;
 
                         }
-                        else if (bid >= Constants::GoWithPartner) {
+                        else if (!canadianLoner && bid >= Constants::GoWithPartner) {
                         
                             #ifdef DEBUG
                             DEBUG_PRINTLN("Go!");
@@ -707,14 +707,32 @@ void play_Update() {
                 uint8_t dealer = gameRound.getDealer_Idx();
                     
                 if (justPressed & UP_BUTTON) {
-                
-                    if (bidInput.getMode() == BidMode::Bid || bidInput.getMode() == BidMode::Alone)   bidInput.decMode();
+
+                    if (canadianLoner && dealer == Constants::HumanPlayer_Partner) {
+
+                        if (bidInput.getMode() == BidMode::Alone)    bidInput.setMode(BidMode::Pass);
+
+                    }
+                    else {  
+
+                        if (bidInput.getMode() == BidMode::Bid || bidInput.getMode() == BidMode::Alone)   bidInput.decMode();
+                    
+                    }
 
                 }
 
                 else if (justPressed & DOWN_BUTTON) {
 
-                    if (bidInput.getMode() == BidMode::Pass || bidInput.getMode() == BidMode::Bid)    bidInput.incMode();
+                    if (canadianLoner && dealer == Constants::HumanPlayer_Partner) {
+
+                        if (bidInput.getMode() == BidMode::Pass)    bidInput.setMode(BidMode::Alone);
+
+                    }
+                    else {
+
+                        if (bidInput.getMode() == BidMode::Pass || bidInput.getMode() == BidMode::Bid)    bidInput.incMode();
+
+                    }
 
                 }
 
@@ -860,13 +878,13 @@ void play_Update() {
                         }
 
                         if (justPressed == LEFT_BUTTON && selectedCard > 0) {
-
+                            game.players[Constants::HumanPlayer].clearSelection();
                             selectedCard--;
 
                         }
 
                         if (justPressed == RIGHT_BUTTON && selectedCard < game.players[Constants::HumanPlayer].getCardCount() - 1) {
-
+                            game.players[Constants::HumanPlayer].clearSelection();
                             selectedCard++;
 
                         }
@@ -957,10 +975,13 @@ void play_Update() {
                 if (gameRound.getKitty()->getRank() != Rank::None) {
 
                     uint8_t dealer = gameRound.getDealer_Idx();
+                    Suit suit = gameRound.getHighestBid().getSuit();
 
+                    gameRound.getKitty()->setTrumps(suit);
                     game.players[dealer].addCard(gameRound.getKitty());
                     game.players[dealer].getCard(5).setSelected(true);
                     game.players[dealer].sort();
+
                     gameState = GameState::Handle_Kitty;
 
                 }
@@ -1073,6 +1094,10 @@ void play_Update() {
 
                             }
 
+                        }
+                        else {
+                            game.players[Constants::HumanPlayer].getCard(0).setSelected(true);
+                            selectedCard = 0;
                         }
 
                         gameState = GameState::Play_PlayerInput;
